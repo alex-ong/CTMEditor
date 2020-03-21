@@ -1,3 +1,7 @@
+import re
+def removeNonNumber(input):
+    result = re.sub("[^0-9]", "", input)
+    return result
 
 #returns if there are multiple "fire" or "heart" emojis.
 def isMultipleMessage(string):
@@ -8,7 +12,7 @@ def SplitMultipleMessages(string):
     result = []
     return result    
 
-REPORT_PREFIX = ":heart:"
+REPORT_PREFIX = ":redheart:"
 SCHEDULE_PREFIX = ":fire:"
     
 REPORT = 0
@@ -21,7 +25,7 @@ def ReportingOrScheduling(string):
         return REPORT
     if string.strip().startswith(SCHEDULE_PREFIX):
         return SCHEDULE
-    else
+    else:
         return None
     
 CC = ":cc:"
@@ -35,23 +39,23 @@ def safeInt(item):
        return int(item)
     except:
        return None
+       
 class ReportInfo(object):
     def __init__(self, fullString):
         self.fullString = fullString
         items = fullString.split()
-        self.matchID = self.findMatchID(items)        
+        self.matchID = self.findMatchID(items)
         self.league = self.findLeague(items)
         self.vod = self.findVOD(items)
-        winner = self.findWinner(items)
-        self.players = False 
-        self.score = False
+        self.winner, self.winScore, self.loseScore = self.mapScores(items) 
     
-    def findMatchID(self, items):        
-        for i, item in items.enumerate:            
+    def findMatchID(self, items):
+        for i, item in enumerate(items):
             if item.lower() == "match":
-                nextIdx = i + 1                
+                nextIdx = i + 1
                 if nextIdx < len(items):
-                    result = safeInt(items[nextIdx])
+                    numberOnly = removeNonNumber(items[nextIdx]) #convert "#20" to "20"
+                    result = safeInt(numberOnly)
                     if result != 0:
                         return result
         return None
@@ -68,8 +72,8 @@ class ReportInfo(object):
             elif item == CT2:
                 return 'ct2'
             elif item.lower == CT:
-                nextIdx = i+1
-                #lbyl. Not pythonic.
+                nextIdx = i + 1
+                #lbyl.  Not pythonic.
                 if nextIdx < len(items):
                     if items[nextIdx].contains('t1'):
                         return 'ct1'
@@ -79,48 +83,43 @@ class ReportInfo(object):
         
     
     
-    #support (3-0)
-    #hard: support (3) playerb(2)
+    #support Winner: playername (3-0)
     def mapScores(self, items):
         result = {}
         winnerIdx = None
         winner = None
         for idx, item in enumerate(items):
             item = item.lower()            
-            if item.startswith("winner") or item.startswith("winner:")
+            if item.startswith("winner") or item.startswith("winner:"):
                 #next word is name
-                winner = items[idx+1]
-                winnerIdx = idx+1
+                winner = items[idx + 1]
+                winnerIdx = idx + 1
                 break
         
         #parse the score
         if not winner:        
             return ("Couldnt find winner. Make sure you have 'Winner:' in your message")
-        if items[winnerIdx+1].startswith('('): #Kirby 703 (3-1)
-            if len(items[winnerIdx+1]) >= 4):
-                score = items[winnerIdx+1]
+        if items[winnerIdx + 1].startswith('('): #Kirby703 (3-1)
+            if len(items[winnerIdx + 1]) >= 4:
+                score = items[winnerIdx + 1]
             else:
                 score = ""
-                idx = winnerIdx+1
+                idx = winnerIdx + 1
                 while len(score) < 4:
                     idx += items[idx]
                     idx += 1
-        elif winner.endswith(')'): #typo. Kirby703(3-1)
+        elif winner.endswith(')'): #typo.  Kirby703(3-1)
             score = items[winnerIdex][:-5]
-        #should have (3-1 now)
+        elif items[winnerIdx + 1][0] in '12345' and len(items[winnerIdx + 1]) == 3: #3-1
+            score = "(" + items[winnerIdx + 1] + ")"
+        #should have "(3-1)" now
         winnerScore = int(score[1])
         loserScore = int(score[3])
         return (winner, winnerScore, loserScore)
-        
-    def parseWinnerScoreMixed(self):
-        pass
-                
-                
-                
                 
     def findVOD(self, items):
         for item in items:
-            if item.contains("twitch.tv"):
+            if "twitch.tv" in item:
                 return item
         return ""
         
@@ -128,3 +127,5 @@ class ReportInfo(object):
 class SchedulingInfo(object):
     def __init__(self,stringData):
         pass
+
+            

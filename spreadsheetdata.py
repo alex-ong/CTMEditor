@@ -32,7 +32,7 @@ def loadSpreadsheetData(league):
     spreadsheet = gc.open_by_key(spreadsheetID)
     sheet = spreadsheet.worksheet(sheetID)
     cell_list = sheet.range(sRange)
-    return (cell_list)
+    return (sheet, cell_list)
     
     
 if __name__ == '__main__':

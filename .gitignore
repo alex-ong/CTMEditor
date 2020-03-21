@@ -1,2 +1,4 @@
 /authentication.json
 /sheetinfo.json
+/__pycache__/
+/.vs/
