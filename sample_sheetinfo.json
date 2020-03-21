@@ -1,3 +1,6 @@
 {
-	"sheetID" : "1Vlverylongstringthatisapproximatelythislong"
+	"sheetID": "1Vlverylongstringthatisapproximatelythislong",
+	"cc": "CTMCC Results",
+	"ccRange": "A2:I30",
+	"ccPlayers": "L2:L17"
 }

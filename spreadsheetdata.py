@@ -15,24 +15,22 @@ def getSheetInfo(league):
     sheetID = None
     with open("sheetinfo.json") as f:    
         data = json.load(f)
-        if "spreadsheetID" in data:            
-            spreadsheetID = data["spreadsheetID"]    
-        else:
-            raise Exception("Entry " + "'" + "spreadsheetID" + "'" + "not found in sheetinfo.json")
-        if league in data:        
-            sheetID = data[league]       
-            sRange = data[league+'Range']
-        else:
-            raise Exception("Entry " + "'" + league + "'" + "not found in sheetinfo.json")
+        spreadsheetID = data["spreadsheetID"]
+        sheetID = data[league]
+        gRange = data[league+'Range']
+        pRange = data[league+'Players']
             
-    return (spreadsheetID, sheetID, sRange)
+    return (spreadsheetID, sheetID, gRange, pRange)
     
-def loadSpreadsheetData(league):    
-    spreadsheetID, sheetID, sRange = getSheetInfo(league)
+def loadSpreadsheetData(league, players=False):
+    spreadsheetID, sheetID, gRange, pRange = getSheetInfo(league)
     spreadsheet = gc.open_by_key(spreadsheetID)
     sheet = spreadsheet.worksheet(sheetID)
-    cell_list = sheet.range(sRange)
-    return (sheet, cell_list)
+    
+    game_data = sheet.range(gRange)
+    player_names = sheet.range(pRange)
+
+    return (sheet, game_data, player_names)
     
     
 if __name__ == '__main__':

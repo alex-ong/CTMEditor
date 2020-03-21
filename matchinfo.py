@@ -28,7 +28,9 @@ class MatchInfo(object):
         
     def isValidMatch(self, playerList):
         if self._isValidMatch is None:
-            self._isValidMatch = (self.player1 in playerList and self.player2 in playerList)
+            self._isValidMatch = (self.player1 in playerList and
+                                  self.player2 in playerList and 
+                                  not self.matchFinished)
                                   
         return self._isValidMatch
     

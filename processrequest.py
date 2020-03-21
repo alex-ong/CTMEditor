@@ -1,5 +1,5 @@
 from .reportinfo import ReportingOrScheduling, ReportInfo, REPORT
-from .matchinfo import ConvertToMatches, GetMatchByIndex
+from .matchinfo import ConvertToMatches, GetMatchByIndex, GetValidMatches
 from .spreadsheetdata import loadSpreadsheetData
 from .playermatch import matchPlayers
 
@@ -15,13 +15,19 @@ def processReport(r):
         return "Could not find league\n"
     if r.matchID is None:            
         return "Could not find match id\n"
-    sheet, ssData = loadSpreadsheetData(r.league)    
-    matches = ConvertToMatches(ssData)
+    sheet, matchData, playerList = loadSpreadsheetData(r.league)        
+    matches = ConvertToMatches(matchData)
     m = GetMatchByIndex(matches, r.matchID)
-    if m is None:
-        return "Could not find match id" + str(r.matchID)
+    playerList = [item.value for item in playerList] #convert from Cells to strings.
 
     result = ""
+    if m is None or not m.isValidMatch(playerList):
+        result += "Could not find match id:" + str(r.matchID) + "\n"
+        result += "Try one of these matches:\n"       
+        valids = GetValidMatches(matches, playerList)        
+        result += "\n".join(str(item) for item in valids)
+        return result    
+    
     if (m.matchFinished):
         result +=  ("Warning, match already reported... " + str(m) + "\n")
     
