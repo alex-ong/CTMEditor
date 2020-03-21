@@ -97,9 +97,11 @@ class ReportInfo(object):
                 break
         
         #parse the score
-        if not winner:        
+        if not winner:
             return ("Couldnt find winner. Make sure you have 'Winner:' in your message")
-        if items[winnerIdx + 1].startswith('('): #Kirby703 (3-1)
+        if winner.endswith(')'): #typo.  Kirby703(3-1)
+            score = items[winnerIdx][-5:]
+        elif items[winnerIdx + 1].startswith('('): #Kirby703 (3-1)
             if len(items[winnerIdx + 1]) >= 4:
                 score = items[winnerIdx + 1]
             else:
@@ -108,8 +110,6 @@ class ReportInfo(object):
                 while len(score) < 4:
                     idx += items[idx]
                     idx += 1
-        elif winner.endswith(')'): #typo.  Kirby703(3-1)
-            score = items[winnerIdex][:-5]
         elif items[winnerIdx + 1][0] in '12345' and len(items[winnerIdx + 1]) == 3: #3-1
             score = "(" + items[winnerIdx + 1] + ")"
         #should have "(3-1)" now
