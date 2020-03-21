@@ -19,3 +19,5 @@ Looks like this
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/{urlgoeshere}.iam.gserviceaccount.com"
 }
 ```
+
+Use `pip install -r requirements.txt` to get the requirements for this module.

@@ -1,10 +1,7 @@
-from .reportinfo import ReportingOrScheduling, ReportInfo, REPORT, matchesReportPrefix
+from .reportinfo import ReportingOrScheduling, ReportInfo, REPORT
 from .matchinfo import ConvertToMatches, GetMatchByIndex
 from .spreadsheetdata import loadSpreadsheetData
 from .playermatch import matchPlayers
-
-def shouldProcessRequest(string):
-    return matchesReportPrefix(string)
 
 def processRequest(string):
     msgType = ReportingOrScheduling(string)
