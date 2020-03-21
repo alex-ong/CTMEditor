@@ -23,7 +23,7 @@ def processReport(r):
 
     result = ""
     if (m.matchFinished):
-        result +=  ("Warning, match already reported..." + str(m) + "\n")
+        result +=  ("Warning, match already reported... " + str(m) + "\n")
     
     print ("Trying to match " + r.winner + " to " + m.player1 + " or " + m.player2)
     which = matchPlayers(r.winner,m.player1,m.player2)
