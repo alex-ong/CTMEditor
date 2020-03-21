@@ -1,9 +1,12 @@
-from reportinfo import ReportingOrScheduling, ReportInfo, REPORT
-import matchinfo
-from spreadsheetdata import loadSpreadsheetData
-from playermatch import matchPlayers
+from .reportinfo import ReportingOrScheduling, ReportInfo, REPORT, matchesReportPrefix
+from .matchinfo import ConvertToMatches, GetMatchByIndex
+from .spreadsheetdata import loadSpreadsheetData
+from .playermatch import matchPlayers
 
-def processRequest(string, user):
+def shouldProcessRequest(string):
+    return matchesReportPrefix(string)
+
+def processRequest(string):
     msgType = ReportingOrScheduling(string)
     if msgType == REPORT:
         r = ReportInfo(string)
@@ -16,8 +19,8 @@ def processReport(r):
     if r.matchID is None:            
         return "Could not find match id\n"
     sheet, ssData = loadSpreadsheetData(r.league)    
-    matches = matchinfo.ConvertToMatches(ssData)
-    m = matchinfo.GetMatchByIndex(matches, r.matchID)
+    matches = ConvertToMatches(ssData)
+    m = GetMatchByIndex(matches, r.matchID)
     if m is None:
         return "Could not find match id" + str(r.matchID)
 
@@ -48,6 +51,6 @@ def processReport(r):
 if __name__ == '__main__':
     TEST_STRING = (":redheart: Completed :cc: Match 13 (XeaL337 vs VideoGamesBrosYT) - Winner: Video 3-0\n"+
                    "VOD: https://www.twitch.tv/videos/569198637")
-    result = processRequest(TEST_STRING, 'username')
+    result = processRequest(TEST_STRING)
     print(result)
     
