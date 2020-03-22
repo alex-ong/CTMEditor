@@ -1,0 +1,34 @@
+{
+    "cc": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "0",
+        "images": {
+            "CTMCC winners.png": [ 0.05, 0.0, 0.9, 0.685 ],
+            "CTMCC losers.png": [ 0.05, 0.685, 0.75, 1.0 ]
+        }
+    },
+    "fc": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "1056668535",
+        "images": {
+            "CTMFC winners.png": [ 0.05, 0.0, 0.885, 0.678 ],
+            "CTMFC losers.png": [ 0.05, 0.678, 0.75, 1.0 ]
+        }
+    },
+    "ct1": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "649170917",
+        "images": {
+            "CTMCT1-a.png": [ 0.00, 0.0, 0.465, 0.496 ],
+            "CTMCT1-b.png": [ 0.00, 0.496, 0.465, 1.0 ]
+        }
+    },
+    "ct2": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "408570250",
+        "images": {
+            "CTMCT2-a.png": [ 0.00, 0.0, 0.465, 0.496 ],
+            "CTMCT2-b.png": [ 0.00, 0.496, 0.465, 1.0 ]
+        }
+    }
+}

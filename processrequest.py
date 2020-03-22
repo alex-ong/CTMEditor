@@ -8,6 +8,8 @@ from .channelsummary import GenerateChannelMessages
 
 #try:
 from ..discord import get_channel
+import discord as discordpy
+
 #except:
 #    def get_channel():
 #        return None
@@ -21,7 +23,7 @@ def processRequest(string):
         success, message = processReport(r) 
         # return what league we read as well as the result of processing the report
         if success:
-            return (r.league, message)
+            return (leagueString(r.league), message)
         else:
             return (None, message)
 
@@ -68,15 +70,20 @@ def updateChannel(context, league):
     channelSettings = GetSummarySettings()[league]
     
     for messageID in channelSettings.messages:
-        message = context.fetch_message(channelSettings.channelID, messageID)
-        if message is not None:        
-            context.delete_message(message)
-        
-
+        try:
+            message = context.fetch_message(channelSettings.channelID, messageID)
+            if message is not None:
+                context.delete_message(message)
+        except:
+            print ("Message not found: " + str(messageID))
     newMessages = GenerateChannelMessages(league)
     channelSettings.messages = []
     for string in newMessages:
-        message = context.send_message(string)
+        if isinstance(string, discordpy.File):
+            print("sending file...")
+            message = context.send_message_full(channelSettings.channelID, file=string)
+        else:
+            message = context.send_message_full(channelSettings.channelID, string)
         channelSettings.messages.append(message.id)
     SaveSummarySettings()
     

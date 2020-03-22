@@ -20,7 +20,8 @@ class MatchInfo(object):
         self.player2 = data[4].value
         self.winner = data[5].value
         self.loser = data[6].value
-        self.matchFinished = self.score1 is not None and self.score2 is not None
+        self.matchFinished = ((self.score1 is not None and self.score2 is not None) and
+                              (self.score1 > 0 or self.score2 > 0))
         self.matchTime = data[7].value
         self.restreamer = data[8].value
         self._isValidMatch = None
@@ -35,6 +36,9 @@ class MatchInfo(object):
     
     # writes match info to data backing, but does not commit over internet
     def writeMatchInfo(self, player1Score, player2Score, wksheet):
+        if (player1Score <= 0 and player2Score <= 0):            
+            player1Score = ""
+            player2Score = ""
         wksheet.update_cell(self.data[2].row,self.data[2].col, player1Score)
         wksheet.update_cell(self.data[3].row,self.data[3].col, player2Score)
     
