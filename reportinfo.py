@@ -50,11 +50,12 @@ class ReportInfo(object):
         self.matchID = self.findMatchID(items)
         self.league = self.findLeague(items)
         self.vod = self.findVOD(items)
-        self.winner, self.winScore, self.loseScore = self.mapScores(items) 
-    
+        
+        self.winner, self.winScore, self.loseScore = self.mapScores(items)
+
     def findMatchID(self, items):
         for i, item in enumerate(items):
-            if item.lower() == "match":
+            if item.lower() == "match" or item.lower() == "game":
                 nextIdx = i + 1
                 if nextIdx < len(items):
                     numberOnly = removeNonNumber(items[nextIdx]) #convert "#20" to "20"
@@ -87,8 +88,6 @@ class ReportInfo(object):
                     elif items[nextIdx].contains('t3'):
                         return LEAGUES.CT3
         return None
-        
-    
     
     #support Winner: playername (3-0)
     def mapScores(self, items):
@@ -105,7 +104,8 @@ class ReportInfo(object):
         
         #parse the score
         if not winner:
-            return ("Couldnt find winner. Make sure you have 'Winner:' in your message")
+            return (None,0,0)
+
         if winner.endswith(')'): #typo.  Kirby703(3-1)
             score = items[winnerIdx][-5:]
         elif items[winnerIdx + 1].startswith('('): #Kirby703 (3-1)
@@ -117,8 +117,11 @@ class ReportInfo(object):
                 while len(score) < 4:
                     idx += items[idx]
                     idx += 1
-        elif items[winnerIdx + 1][0] in '12345' and len(items[winnerIdx + 1]) == 3: #3-1
+        elif items[winnerIdx + 1][0] in '012345' and len(items[winnerIdx + 1]) == 3: #3-1
             score = "(" + items[winnerIdx + 1] + ")"
+        else:
+            return (winner, None, None)
+
         #should have "(3-1)" now
         winnerScore = int(score[1])
         loserScore = int(score[3])

@@ -19,16 +19,16 @@
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
         "sheet_id": "649170917",
         "images": {
-            "CTMCT1-a.png": [ 0.00, 0.0, 0.465, 0.496 ],
-            "CTMCT1-b.png": [ 0.00, 0.496, 0.465, 1.0 ]
+            "CTMCT1-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
+            "CTMCT1-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
         }
     },
     "ct2": {
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
-        "sheet_id": "408570250",
+        "sheet_id": "1239711358",
         "images": {
-            "CTMCT2-a.png": [ 0.00, 0.0, 0.465, 0.496 ],
-            "CTMCT2-b.png": [ 0.00, 0.496, 0.465, 1.0 ]
+            "CTMCT2-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
+            "CTMCT2-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
         }
     }
 }
