@@ -10,6 +10,11 @@ from .channelsummary import GenerateChannelMessages
 from ..discord import get_channel
 import discord as discordpy
 
+import threading
+LOCK = None
+if LOCK is None:
+    LOCK = threading.RLock()
+
 #except:
 #    def get_channel():
 #        return None
@@ -87,36 +92,45 @@ def processReport(r):
 
 # expects "cc", "fc" etc.
 def updateChannel(context, league):
-    channelSettings = GetSummarySettings()[league]
+    global LOCK
+    try:        
+        LOCK.acquire()        
+        channelSettings = GetSummarySettings()[league]
     
-    for messageID in channelSettings.messages:
-        try:
-            message = context.fetch_message(channelSettings.channelID, messageID)
-            if message is not None:
-                context.delete_message(message)
-        except:
-            print ("Message not found: " + str(messageID))
-    newMessages = GenerateChannelMessages(league)
-    channelSettings.messages = []
-    for string in newMessages:
-        if isinstance(string, discordpy.File):
-            print("sending file...")
-            message = context.send_message_full(channelSettings.channelID, file=string)
-        else:
-            message = context.send_message_full(channelSettings.channelID, string)
-        channelSettings.messages.append(message.id)
-    SaveSummarySettings()
-    
+        for messageID in channelSettings.messages:
+            try:
+                message = context.fetch_message(channelSettings.channelID, messageID)
+                if message is not None:
+                    context.delete_message(message)
+            except:
+                print ("Message not found: " + str(messageID))
+        newMessages = GenerateChannelMessages(league)
+        channelSettings.messages = []
+        for string in newMessages:
+            if isinstance(string, discordpy.File):
+                print("sending file...")
+                message = context.send_message_full(channelSettings.channelID, file=string)
+            else:
+                message = context.send_message_full(channelSettings.channelID, string)
+            channelSettings.messages.append(message.id)
+        SaveSummarySettings()
+    finally:
+        LOCK.release()        
 
 def setupChannel(context, league):
-    print(context.channel.id)
-    channelSettings = GetSummarySettings()[league]
-    channelSettings.channelID = context.channel.id
-    SaveSummarySettings()
+    global LOCK
+    try:
+        LOCK.acquire()        
+        print(context.channel.id)
+        channelSettings = GetSummarySettings()[league]
+        channelSettings.channelID = context.channel.id
+        SaveSummarySettings()
     
-    updateChannel(context, league)
-    # delete requestors message
-    context.delete_message(context.message)
+        updateChannel(context, league)
+        # delete requestors message
+        context.delete_message(context.message)
+    finally:
+        LOCK.release()
 
 if __name__ == '__main__':
     TEST_STRING = (":redheart: Completed :cc: Match 13 (XeaL337 vs VideoGamesBrosYT) - Winner: Video 3-0\n"+
