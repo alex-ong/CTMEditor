@@ -1,0 +1,27 @@
+{
+    "cc": {
+        "name": "cc",
+        "channelID": "",
+        "messages": []
+    },
+    "fc": {
+        "name": "fc",
+        "channelID": "",
+        "messages": []
+    },
+    "ct1": {
+        "name": "ct1",
+        "channelID": "",
+        "messages": []
+    },
+    "ct2": {
+        "name": "ct2",
+        "channelID": "",
+        "messages": []
+    },
+    "ct3": {
+        "name": "ct3",
+        "channelID": "",
+        "messages": []
+    }
+}

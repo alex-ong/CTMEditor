@@ -29,9 +29,8 @@ class MatchInfo(object):
     def isValidMatch(self, playerList):
         if self._isValidMatch is None:
             self._isValidMatch = (self.player1 in playerList and
-                                  self.player2 in playerList and 
-                                  not self.matchFinished)
-                                  
+                                  self.player2 in playerList)
+
         return self._isValidMatch
     
     # writes match info to data backing, but does not commit over internet
@@ -78,7 +77,7 @@ def ConvertToMatches(fullData):
 # given a list of Matches, returns unplayed matches that have
 # players on both sides.
 def GetValidMatches(matches, playerlist):
-    result = [m for m in matches if m.isValidMatch(playerlist)]
+    result = [m for m in matches if m.isValidMatch(playerlist) and not m.matchFinished]
     return result
 
 # given a match index and a list of matches, returns

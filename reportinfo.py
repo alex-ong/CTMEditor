@@ -1,4 +1,6 @@
 import re
+from .util import LEAGUES
+
 def removeNonNumber(input):
     result = re.sub("[^0-9]", "", input)
     return result
@@ -32,6 +34,7 @@ CC = ":cc:"
 FC = ":fc:"
 CT1 = ":ct::t1:"
 CT2 = ":ct::t2:"
+CT3 = ":ct::t3:"
 CT = ":ct:"
 
 def safeInt(item):
@@ -64,21 +67,25 @@ class ReportInfo(object):
         for i, item in enumerate(items):
             item = item.lower()
             if item == CC:
-                return 'cc'
+                return LEAGUES.CC
             elif item == FC:
-                return 'fc'
+                return LEAGUES.FC
             elif item == CT1:
-                return 'ct1'
+                return LEAGUES.CT1
             elif item == CT2:
-                return 'ct2'
+                return LEAGUES.CT2
+            elif item == CT3:
+                return LEAGUES.CT3
             elif item.lower == CT:
                 nextIdx = i + 1
                 #lbyl.  Not pythonic.
                 if nextIdx < len(items):
                     if items[nextIdx].contains('t1'):
-                        return 'ct1'
+                        return LEAGUES.CT1
                     elif items[nextIdx].contains('t2'):
-                        return 'ct2'
+                        return LEAGUES.CT2
+                    elif items[nextIdx].contains('t3'):
+                        return LEAGUES.CT3
         return None
         
     
