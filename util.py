@@ -1,5 +1,7 @@
 ﻿import os
 from enum import Enum
+
+
 class LEAGUES(Enum):
     ME = 0
     CC = 1
@@ -8,7 +10,8 @@ class LEAGUES(Enum):
     CT2 = 4
     CT3 = 5
 
-#convert from enum to string
+
+# convert from enum to string
 def leagueString(leagues):
     if leagues == LEAGUES.ME:
         return "me"
@@ -24,6 +27,7 @@ def leagueString(leagues):
         return "ct3"
     else:
         return None
+
 
 def modulePath():
     return os.path.dirname(os.path.realpath(__file__))
