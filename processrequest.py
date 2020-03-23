@@ -1,4 +1,11 @@
-from .requestinfo import ReportingOrScheduling, ReportInfo, ScheduleInfo, REPORT, SCHEDULE, isMultipleMessage
+from .requestinfo import (
+    ReportingOrScheduling,
+    ReportInfo,
+    ScheduleInfo,
+    REPORT,
+    SCHEDULE,
+    isMultipleMessage,
+)
 from .util import leagueString
 from .channelcache import GetSummarySettings, SaveSummarySettings
 from .channelsummary import GenerateChannelMessages
@@ -12,25 +19,28 @@ LOCK = None
 if LOCK is None:
     LOCK = threading.RLock()
 
-#split between report or schdule and call appropriate side.
-def processRequest(string):
+# split between report or schdule and call appropriate side.
+def processRequest(user, string):
     msgType = ReportingOrScheduling(string)
     if msgType != REPORT and msgType != SCHEDULE:
         return (None, "Couldn't find :fire: or :redheart:")
     if isMultipleMessage(string):
-        return (None, "You have multiple :fire: or :redheart: in your message! Only one report per message!")
+        return (
+            None,
+            "You have multiple :fire: or :redheart: in your message! Only one report per message!",
+        )
 
     if msgType == REPORT:
         data = ReportInfo(string)
         success, message = processReport(data)
     elif msgType == SCHEDULE:
-        data = ScheduleInfo(string)
+        data = ScheduleInfo(user, string)
         success, message = processSchedule(data)
 
     if success:
         return (leagueString(data.league), message)
     else:
-        return (None, message)    
+        return (None, message)
 
 
 # expects "cc", "fc" etc.
@@ -55,7 +65,7 @@ def updateChannel(context, league):
                     channelSettings.channelID, file=string
                 )
             else:
-                message = context.send_message_full(channelSettings.channelID, string,embeds=False)
+                message = context.send_message_full(channelSettings.channelID, string)
             channelSettings.messages.append(message.id)
         SaveSummarySettings()
     finally:

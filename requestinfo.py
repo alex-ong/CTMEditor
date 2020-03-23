@@ -1,10 +1,11 @@
 import re
 from .util import LEAGUES
+from datetime import datetime
+
 
 def removeNonNumber(input):
     result = re.sub("[^0-9]", "", input)
     return result
-
 
 
 REPORT_PREFIX = ":redheart:"
@@ -18,6 +19,7 @@ SCHEDULE = 1
 def isMultipleMessage(string):
     if string.count(REPORT_PREFIX) + string.count(SCHEDULE_PREFIX) > 1:
         return True
+
 
 # use this to determine whether we want to actually do anything
 # with the message.
@@ -46,6 +48,7 @@ def safeInt(item):
     except:
         return None
 
+
 def findLeague(items):
     for i, item in enumerate(items):
         item = item.lower()
@@ -71,24 +74,28 @@ def findLeague(items):
                     return LEAGUES.CT3
     return None
 
+
+MATCH_WORDS = ["match", "game"]
+
+
 def findMatchID(items):
     for i, item in enumerate(items):
-        if item.lower() == "match" or item.lower() == "game":
+        if item.lower() in MATCH_WORDS:
             nextIdx = i + 1
             if nextIdx < len(items):
-                numberOnly = removeNonNumber(
-                    items[nextIdx]
-                )  # convert "#20" to "20"
+                numberOnly = removeNonNumber(items[nextIdx])  # convert "#20" to "20"
                 result = safeInt(numberOnly)
                 if result != 0:
                     return result
     return None
+
 
 def findVOD(items):
     for item in items:
         if "twitch.tv" in item:
             return item
     return ""
+
 
 class ReportInfo(object):
     def __init__(self, fullString):
@@ -140,15 +147,51 @@ class ReportInfo(object):
         loserScore = int(score[3])
         return (winner, winnerScore, loserScore)
 
-# :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 6pm PDT (0100 UTC)
-# :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann on March 17 at 0700 PDT
+
+NOW = ["now", "shortly", "immediately"]
+MYSELF = ["i", ":fire:i"]
+# :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann on Mar-17 at 0700 PDT
+# :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 0700 PDT
 class ScheduleInfo(object):
     def __init__(self, reporter, fullString):
-        self.fullString = stringData
-        self.reporter = reporter
+        self.fullString = fullString
+        self.restreamer = self.findRestreamer(fullString)
         items = fullString.split()
         self.league = findLeague(items)
-        self._time = None
-    
+        self.matchID = findMatchID(items)
+
+    def findRestreamer(self, fullString, reporter):
+        items = fullString.lower().split()
+        will_idx = items.index("will")
+        restream_idx = items.index("restream")
+        restreamer = reporter
+        if will_idx != -1 and will_idx == restream_idx - 1:
+            restreamer = items[will_idx - 1]
+            if restreamer in MYSELF:
+                restreamer = reporter
+        return restreamer
+
     def mapTime(self):
-        pass    
+        dateString = None
+        timeString = None
+        timeZone = None
+        try:
+            items = self.fullString.lower().split()
+            for string in NOW:
+                if string in items:
+                    dt = datetime.utcnow()
+                    dateString = dt.strftime("%b-%d")
+                    timeString = dt.strftime("%H%M")
+                    timeZone = "UTC"
+                    return (dateString, timeString, timeZone)
+
+            onIndex = items.index("on")
+            atIndex = items.index("at")
+            if onIndex != -1:
+                dateString = items[onIndex + 1]
+            if atIndex != -1:
+                timeString = items[atIndex + 1]
+                tzIndex = items[atIndex + 1]
+        except:  # pokemon
+            pass
+        return (dateString, timeString, timeZone)

@@ -6,14 +6,20 @@ from .util import leagueString
 # return whether we succeeded, as well as error message
 def processReport(r):
     if r.league is None:
-        return (False,
-            "Could not find league\n Please include one of these: " + " ".join(LEAGUE_LIST) + "\n",)
+        return (
+            False,
+            "Could not find league\n Please include one of these: "
+            + " ".join(LEAGUE_LIST)
+            + "\n",
+        )
 
     sheet, matchData, playerList = loadSpreadsheetData(leagueString(r.league))
     matches = ConvertToMatches(matchData)
 
     if r.matchID is None:
-        result = ("Could not find match id\n Make sure it you wrote match # with a space.\n")
+        result = (
+            "Could not find match id\n Make sure it you wrote match # with a space.\n"
+        )
         result += ValidMatchesString(matches, playerList)
         return (False, result)
 
@@ -40,11 +46,21 @@ def processReport(r):
 
     if m.matchFinished:
         result += "Warning, match already reported... " + str(m) + "\n"
-    
-    result += "Reporting for " + leagueString(r.league) + " Match " + str(r.matchID) + "\n"
+
+    result += (
+        "Reporting for " + leagueString(r.league) + " Match " + str(r.matchID) + "\n"
+    )
     which = matchPlayers(r.winner, m.player1, m.player2)
     if which is None:
-        result += "Could not match " + r.winner + " to either : " + m.player1 + " or " + m.player2 + "\n"
+        result += (
+            "Could not match "
+            + r.winner
+            + " to either : "
+            + m.player1
+            + " or "
+            + m.player2
+            + "\n"
+        )
         return (False, result)
     elif which == "P1":
         result += "Matched " + r.winner + " to " + m.player1 + "\n"

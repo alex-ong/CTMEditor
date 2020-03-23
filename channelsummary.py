@@ -22,16 +22,22 @@ def GenerateChannelMessages(league):
 
     return result
 
+
 """Yield successive n-sized chunks from lst."""
-def chunks(lst, n):    
+
+
+def chunks(lst, n):
     for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+        yield lst[i : i + n]
+
 
 def tabulate(items):
     return "| " + " | ".join(items) + " |\n"
 
+
 def Header():
     return [":stencil: The Stencil (3.6):  <http://bit.ly/TheStencil>"]
+
 
 def GenerateMatches(league):
     sheet, game_data, player_names = loadSpreadsheetData(league)
@@ -39,6 +45,7 @@ def GenerateMatches(league):
     result.extend(GenerateAllMatches(sheet, game_data, player_names))
     result.extend(GenerateUnplayedMatches(sheet, game_data, player_names))
     return result
+
 
 def GenerateAllMatches(sheet, game_data, player_names):
     results = []
@@ -51,7 +58,7 @@ def GenerateAllMatches(sheet, game_data, player_names):
     message += "```\n"
     results.append(message)
 
-    # one message every 8 games.    
+    # one message every 8 games.
     for chunk in chunks(matches, 8):
         message = "```javascript\n"
         for match in chunk:
@@ -59,14 +66,15 @@ def GenerateAllMatches(sheet, game_data, player_names):
                 str(match.matchNo).rjust(2),
                 str(match.player1).ljust(20),
                 str(match.player2).ljust(20),
-                match.printableScore().rjust(5)
+                match.printableScore().rjust(5),
             ]
             message += tabulate(line)
         message += "```\n"
         results.append(message)
     return results
 
-def GenerateUnplayedMatches(sheet, game_data, player_names):    
+
+def GenerateUnplayedMatches(sheet, game_data, player_names):
     matches = ConvertToMatches(game_data)
     matches = GetValidMatches(matches, player_names)
     if len(matches) == 0:
@@ -79,8 +87,8 @@ def GenerateUnplayedMatches(sheet, game_data, player_names):
     message += "-" * (len(tabulate(title)) - 1) + "\n"
     message += "```\n"
     results.append(message)
-    
-    for chunk in chunks(matches,8):
+
+    for chunk in chunks(matches, 8):
         for match in chunk:
             message = "```javascript\n"
             line = [
@@ -91,7 +99,7 @@ def GenerateUnplayedMatches(sheet, game_data, player_names):
             message += tabulate(line)
             message += "```\n"
             results.append(message)
-           
+
     return results
 
 
