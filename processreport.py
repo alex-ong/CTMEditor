@@ -64,10 +64,10 @@ def processReport(r):
         return (False, result)
     elif which == "P1":
         result += "Matched " + r.winner + " to " + m.player1 + "\n"
-        m.writeMatchInfo(r.winScore, r.loseScore, sheet)
+        m.writeMatchInfo(r.winScore, r.loseScore, r.vod, sheet)
     elif which == "P2":
         result += "Matched " + r.winner + " to " + m.player2 + "\n"
-        m.writeMatchInfo(r.loseScore, r.winScore, sheet)
+        m.writeMatchInfo(r.loseScore, r.winScore, r.vod, sheet)
     # finally, push result to cloud
     result += "Successfully logged result\n"
 
