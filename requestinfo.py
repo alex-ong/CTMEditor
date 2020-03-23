@@ -9,7 +9,8 @@ def removeNonNumber(input):
 
 
 REPORT_PREFIX = ":redheart:"
-SCHEDULE_PREFIX = ":fire:"
+SCHEDULE_PREFIX = "🔥"
+SCHEDULE_PREFIXES = ["🔥", ":fire:", ":flame:"]
 
 REPORT = 0
 SCHEDULE = 1
@@ -17,17 +18,23 @@ SCHEDULE = 1
 
 # returns if there are multiple "fire" or "heart" emojis.
 def isMultipleMessage(string):
-    if string.count(REPORT_PREFIX) + string.count(SCHEDULE_PREFIX) > 1:
+    number = 0
+    number += string.count(REPORT_PREFIX)
+    for item in SCHEDULE_PREFIXES:
+        number += string.count(item)
+    if number > 1:
         return True
 
 
 # use this to determine whether we want to actually do anything
 # with the message.
 def ReportingOrScheduling(string):
-    if string.strip().startswith(REPORT_PREFIX):
+    stripped = string.strip()
+    if stripped.startswith(REPORT_PREFIX):
         return REPORT
-    if string.strip().startswith(SCHEDULE_PREFIX):
-        return SCHEDULE
+    for item in SCHEDULE_PREFIXES:
+        if stripped.startswith(item):
+            return SCHEDULE
     else:
         return None
 
@@ -149,13 +156,13 @@ class ReportInfo(object):
 
 
 NOW = ["now", "shortly", "immediately"]
-MYSELF = ["i", ":fire:i"]
+MYSELF = ["i", ":fire:i", "🔥i"]
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann on Mar-17 at 0700 PDT
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 0700 PDT
 class ScheduleInfo(object):
     def __init__(self, reporter, fullString):
         self.fullString = fullString
-        self.restreamer = self.findRestreamer(fullString)
+        self.restreamer = self.findRestreamer(fullString, reporter)
         items = fullString.split()
         self.league = findLeague(items)
         self.matchID = findMatchID(items)
@@ -190,8 +197,8 @@ class ScheduleInfo(object):
             if onIndex != -1:
                 dateString = items[onIndex + 1]
             if atIndex != -1:
-                timeString = items[atIndex + 1]
-                tzIndex = items[atIndex + 1]
+                timeString = items[atIndex + 1]                
+                timeZone = items[atIndex + 2]
         except:  # pokemon
             pass
         return (dateString, timeString, timeZone)

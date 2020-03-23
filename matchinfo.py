@@ -52,7 +52,7 @@ class MatchInfo(object):
         wksheet.update_cell(self.data[2].row, self.data[2].col, player1Score)
         wksheet.update_cell(self.data[3].row, self.data[3].col, player2Score)
 
-    def writeRestreamInfo(self, matchTimeStamp, restreamer):
+    def writeRestreamInfo(self, matchTimeStamp, restreamer, wksheet):
         wksheet.update_cell(self.data[7].row, self.data[7].col, matchTimeStamp)
         wksheet.update_cell(self.data[8].row, self.data[8].col, restreamer)
 

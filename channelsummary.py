@@ -50,7 +50,7 @@ def GenerateMatches(league):
 def GenerateAllMatches(sheet, game_data, player_names):
     results = []
     matches = ConvertToMatches(game_data)
-    message = "Match History: \n"
+    message = "**Match List:**\n"
     message += "```javascript\n"
     title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Score"]
     message += tabulate(title)
@@ -80,25 +80,28 @@ def GenerateUnplayedMatches(sheet, game_data, player_names):
     if len(matches) == 0:
         return "`All matches completed!`"
     results = []
-    message = "Playable Matches: \n"
+    message = "**Playable Matches:** \n"
     message += "```\n"
-    title = ["M#", "Player1".ljust(20), "Player2".ljust(20)]
+    title = ["M#", "Player1".ljust(20), "Player2".ljust(20), 
+             "Match time".ljust(19), "Restreamer".ljust(15)]
     message += tabulate(title)
     message += "-" * (len(tabulate(title)) - 1) + "\n"
     message += "```\n"
     results.append(message)
 
     for chunk in chunks(matches, 8):
-        for match in chunk:
-            message = "```javascript\n"
+        message = "```javascript\n"
+        for match in chunk:            
             line = [
                 str(match.matchNo).rjust(2),
                 str(match.player1).ljust(20),
                 str(match.player2).ljust(20),
+                str(match.matchTime).ljust(19),
+                str(match.restreamer).ljust(15)
             ]
-            message += tabulate(line)
-            message += "```\n"
-            results.append(message)
+            message += tabulate(line)                        
+        message += "```\n"
+        results.append(message)
 
     return results
 

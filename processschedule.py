@@ -48,9 +48,24 @@ def processSchedule(s):
 
     date, time, tz = s.mapTime()
 
-    result += "Date: " + str(date) + " Time: " + str(time) + "Timezone: " + str(tz)
+    result += "Date: " + str(date) + " Time: " + str(time) + " Timezone: " + str(tz) + "\n"
+    if tz is None:
+        result += "Sorry, no timezone detected, Try: [ on MAR-04 at 0700 EST ]"
+        return (False, result)
+    if time is None:
+        result += "Sorry, no time detected. Try: [ on MAR-04 at 0700 EST ]"
+        return (False, result)
+    if date is None:
+        result += "Sorry, no date detected. Try: [ on MAR-04 at 0700 EST ]"
+        return (False, result)
+    
+    # now to fix the goddamn time.
+    # todo, fix and change to UTC. good luck future alex.
 
-    result += "Restreamer: " + str(s.restreamer)
+    result += "Restreamer: " + str(s.restreamer) + "\n"
     # on success, write back to the spreadsheet lmao.
-    # m.writeRestreamInfo(timestampstring, restreamerstring)
-    return (False, result)
+    timestampstring = " ".join(str(item) for item in [date,time,tz])
+
+    m.writeRestreamInfo(timestampstring, s.restreamer, sheet)
+    result += "Successfully updated.\n"
+    return (True, result)
