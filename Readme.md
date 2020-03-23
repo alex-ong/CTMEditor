@@ -21,3 +21,20 @@ Looks like this
 ```
 
 Use `pip install -r requirements.txt` to get the requirements for this module.
+
+
+Quick setup
+===
+1) Get the following files from xeal:
+* authentication.json
+* sheetinfo.json
+2) Paste them in this folder.
+3) Run `pip install -r requirements.txt`
+4) Go to CTM Reporting, type `:redheart: setup reporting`
+5) Go to CTM CC,FC,CT1,CT2 channels. type 
+  * `:redheart: setup cc`
+  * `:redheart: setup fc`
+  * `:redheart: setup ct1`
+  * `:redheart: setup ct2`
+  
+6) Should all be good!
