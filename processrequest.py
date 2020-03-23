@@ -1,112 +1,36 @@
-from .reportinfo import ReportingOrScheduling, ReportInfo, REPORT
-from .matchinfo import ConvertToMatches, GetMatchByIndex, GetValidMatches
-from .spreadsheetdata import loadSpreadsheetData
-from .playermatch import matchPlayers
+from .requestinfo import ReportingOrScheduling, ReportInfo, ScheduleInfo, REPORT, SCHEDULE, isMultipleMessage
 from .util import leagueString
-from .channelcache import ChannelSummaryCache, GetSummarySettings, SaveSummarySettings
+from .channelcache import GetSummarySettings, SaveSummarySettings
 from .channelsummary import GenerateChannelMessages
+from .processreport import processReport
+from .processschedule import processSchedule
 
-# try:
-from ..discord import get_channel
 import discord as discordpy
-
 import threading
 
 LOCK = None
 if LOCK is None:
     LOCK = threading.RLock()
 
-# except:
-#    def get_channel():
-#        return None
-#
-
-
+#split between report or schdule and call appropriate side.
 def processRequest(string):
     msgType = ReportingOrScheduling(string)
+    if msgType != REPORT and msgType != SCHEDULE:
+        return (None, "Couldn't find :fire: or :redheart:")
+    if isMultipleMessage(string):
+        return (None, "You have multiple :fire: or :redheart: in your message! Only one report per message!")
+
     if msgType == REPORT:
-        r = ReportInfo(string)
-        print("Reading League", leagueString(r.league))
-        success, message = processReport(r)
-        # return what league we read as well as the result of processing the report
-        if success:
-            return (leagueString(r.league), message)
-        else:
-            return (None, message)
+        data = ReportInfo(string)
+        success, message = processReport(data)
+    elif msgType == SCHEDULE:
+        data = ScheduleInfo(string)
+        success, message = processSchedule(data)
 
-
-def ValidMatchesString(matches, playerList):
-    valids = GetValidMatches(matches, playerList)
-    result = "\n".join(str(item) for item in valids) + "\n"
-    return result
-
-
-# return success and message
-def processReport(r):
-    if r.league is None:
-        return (
-            False,
-            "Could not find league\n Please include one of these: :cc: :fc: :ct::t1: :ct::t2: :ct::t3:",
-        )
-
-    sheet, matchData, playerList = loadSpreadsheetData(leagueString(r.league))
-    matches = ConvertToMatches(matchData)
-
-    if r.matchID is None:
-        result = (
-            "Could not find match id\n Make sure it you wrote match # with a space.\n"
-        )
-        result += ValidMatchesString(matches, playerList)
-        return (False, result)
-
-    if r.winner is None:
-        result = 'Could not find winner.\n Please use "winner:" tag\n'
-        return (False, result)
-
-    if r.winScore is None:
-        result = "Could not find score.\n Please put score as (3-x) straight after winner name\n"
-        return (False, result)
-
-    m = GetMatchByIndex(matches, r.matchID)
-
-    result = ""
-    if m is None:
-        result += "Could not find match id:" + str(r.matchID) + "\n"
-        result += "Try one of these matches:\n"
-        result += ValidMatchesString(matches, playerList)
-        return (False, result)
-    if not m.isValidMatch(playerList):
-        result += "Match can't be played yet: " + str(r.matchID) + "\n"
-        result += str(m) + "\n"
-        return (False, result)
-
-    if m.matchFinished:
-        result += "Warning, match already reported... " + str(m) + "\n"
-
-    print("Trying to match " + r.winner + " to " + m.player1 + " or " + m.player2)
-    which = matchPlayers(r.winner, m.player1, m.player2)
-    if which is None:
-        result += (
-            "Could not match "
-            + r.winner
-            + " to either : "
-            + m.player1
-            + " or "
-            + m.player2
-            + "\n"
-        )
-        return (False, result)
-    elif which == "P1":
-        result += "Matched " + r.winner + " to " + m.player1 + "\n"
-        m.writeMatchInfo(r.winScore, r.loseScore, sheet)
-    elif which == "P2":
-        result += "Matched " + r.winner + " to " + m.player2 + "\n"
-        m.writeMatchInfo(r.loseScore, r.winScore, sheet)
-
-    # finally, push result to cloud
-    result += "Successfully logged result\n"
-
-    return (True, result)
+    if success:
+        return (leagueString(data.league), message)
+    else:
+        return (None, message)    
 
 
 # expects "cc", "fc" etc.
@@ -127,27 +51,39 @@ def updateChannel(context, league):
         channelSettings.messages = []
         for string in newMessages:
             if isinstance(string, discordpy.File):
-                print("sending file...")
                 message = context.send_message_full(
                     channelSettings.channelID, file=string
                 )
             else:
-                message = context.send_message_full(channelSettings.channelID, string)
+                message = context.send_message_full(channelSettings.channelID, string,embeds=False)
             channelSettings.messages.append(message.id)
         SaveSummarySettings()
     finally:
         LOCK.release()
 
 
+# returns true if we posted a message in the reporting channel.
+def checkChannelPeon(context):
+    global LOCK
+    try:
+        LOCK.acquire()
+        channelSettings = GetSummarySettings()["reporting"]
+        return context.channel.id == channelSettings.channelID
+    finally:
+        LOCK.release()
+
+
+# call this to save which channel to write our results to.
 def setupChannel(context, league):
     global LOCK
     try:
         LOCK.acquire()
-        print(context.channel.id)
         channelSettings = GetSummarySettings()[league]
         channelSettings.channelID = context.channel.id
         SaveSummarySettings()
-
+        if league == "reporting":
+            context.send_message("This is now the channel where match reports are due.")
+            return
         updateChannel(context, league)
         # delete requestors message
         context.delete_message(context.message)

@@ -1,4 +1,9 @@
 {
+    "reporting": {
+        "name": "reporting",
+        "channelID": 691066503423852655,
+        "messages": []
+    },
     "cc": {
         "name": "cc",
         "channelID": "",

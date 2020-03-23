@@ -28,6 +28,13 @@ class MatchInfo(object):
         self.restreamer = data[8].value
         self._isValidMatch = None
         self.data = data
+    
+    def printableScore(self):
+        if not self.matchFinished:
+            return ""
+        s1 = str(self.score1) if self.score1 is not None else "*"
+        s2 = str(self.score2) if self.score2 is not None else "*"
+        return s1+"-"+s2
 
     def isValidMatch(self, playerList):
         if self._isValidMatch is None:
@@ -107,6 +114,10 @@ def GetValidMatches(matches, playerlist):
     result = [m for m in matches if m.isValidMatch(playerlist) and not m.matchFinished]
     return result
 
+def ValidMatchesString(matches, playerList):
+    valids = GetValidMatches(matches, playerList)
+    result = "\n".join(str(item) for item in valids) + "\n"
+    return result
 
 # given a match index and a list of matches, returns
 # the correct MatchInfo.

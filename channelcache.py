@@ -11,7 +11,7 @@ def _loadSettings():
     with open(join(modulePath(), FILE)) as f:
         data = json.load(f, object_pairs_hook=collections.OrderedDict)
     result = {}
-    for key in ["cc", "fc", "ct1", "ct2", "ct3"]:
+    for key in data:
         result[key] = ChannelSummaryCache(data[key])
     return result
 
