@@ -81,29 +81,8 @@ class MatchInfo(object):
         )
 
 
-def SplitDatabaseRows(fullData):
-    if len(fullData) == 0:
-        return []
-    currentRowIdx = None
-    currentRow = []
-    result = []
-    for item in fullData:
-        if item.row != currentRowIdx:
-            if currentRowIdx is not None:
-                result.append(currentRow)
-            currentRow = [item]
-            currentRowIdx = item.row
-        else:
-            currentRow.append(item)
-    if len(currentRow) > 0:
-        result.append(currentRow)
-
-    return result
-
-
 # returns a list of MatchInfo
-def ConvertToMatches(fullData):
-    rows = SplitDatabaseRows(fullData)
+def ConvertToMatches(rows):
     result = []
     for row in rows:
         if MatchInfo.isValidMatchID(row):

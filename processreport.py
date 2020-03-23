@@ -13,7 +13,7 @@ def processReport(r):
             + "\n",
         )
 
-    sheet, matchData, playerList = loadSpreadsheetData(leagueString(r.league))
+    sheet, matchData, playerList, _ = loadSpreadsheetData(leagueString(r.league))
     matches = ConvertToMatches(matchData)
 
     if r.matchID is None:

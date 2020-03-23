@@ -13,7 +13,7 @@ def processSchedule(s):
             + "\n",
         )
 
-    sheet, matchData, playerList = loadSpreadsheetData(leagueString(s.league))
+    sheet, matchData, playerList, _ = loadSpreadsheetData(leagueString(s.league))
     matches = ConvertToMatches(matchData)
 
     if s.matchID is None:

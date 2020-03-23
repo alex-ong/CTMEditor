@@ -26,21 +26,42 @@ def getSheetInfo(league):
         sheetID = data[league]
         gRange = data[league + "Range"]
         pRange = data[league + "Players"]
+        dRange = data[league + "Dates"]
 
-    return (spreadsheetID, sheetID, gRange, pRange)
+    return (spreadsheetID, sheetID, gRange, pRange, dRange)
 
 
 def loadSpreadsheetData(league):
-    spreadsheetID, sheetID, gRange, pRange = getSheetInfo(league)
+    spreadsheetID, sheetID, gRange, pRange, dRange = getSheetInfo(league)
     spreadsheet = gc.open_by_key(spreadsheetID)
     sheet = spreadsheet.worksheet(sheetID)
 
-    game_data = sheet.range(gRange)
+    game_data = SplitDatabaseRows(sheet.range(gRange))
     player_names = sheet.range(pRange)
     player_names = [item.value for item in player_names]  # convert to string
+    round_data = SplitDatabaseRows(sheet.range(dRange))
+    
+    return (sheet, game_data, player_names, round_data)
 
-    return (sheet, game_data, player_names)
+#splits from a bunch of cells into lists of rows.
+def SplitDatabaseRows(fullData):
+    if len(fullData) == 0:
+        return []
+    currentRowIdx = None
+    currentRow = []
+    result = []
+    for item in fullData:
+        if item.row != currentRowIdx:
+            if currentRowIdx is not None:
+                result.append(currentRow)
+            currentRow = [item]
+            currentRowIdx = item.row
+        else:
+            currentRow.append(item)
+    if len(currentRow) > 0:
+        result.append(currentRow)
 
+    return result
 
 if __name__ == "__main__":
     # simple test
