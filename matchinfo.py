@@ -46,7 +46,14 @@ class MatchInfo(object):
         if self.matchFinished:
             return (str(self.matchNo) + ": " + self.player1 + " (" + str(self.score1) + "-" + 
                     str(self.score2) + ") " + self.player2)
-        return (str(self.matchNo) + ":" + self.player1 + " vs " + self.player2)
+        
+        vm = ""
+        if self._isValidMatch is not None:
+            if self._isValidMatch:
+                vm = "(playable)"
+            else:
+                vm = "(not playable)"
+        return (str(self.matchNo) + ": " + self.player1 + " vs " + self.player2 + " " + vm)
 
 def SplitDatabaseRows(fullData):
     if len(fullData) == 0:
