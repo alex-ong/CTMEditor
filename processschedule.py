@@ -1,6 +1,7 @@
 from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
 from .spreadsheetdata import loadSpreadsheetData
 from .util import leagueString
+from .requestinfo import LEAGUE_LIST
 import pytz
 
 # return whether we succeeded, as well as error message

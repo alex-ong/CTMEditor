@@ -69,15 +69,15 @@ def findLeague(items):
             return LEAGUES.CT2
         elif item == CT3:
             return LEAGUES.CT3
-        elif item.lower == CT:
+        elif item == CT:
             nextIdx = i + 1
             # lbyl.  Not pythonic.
             if nextIdx < len(items):
-                if items[nextIdx].contains("t1"):
+                if "t1" in items[nextIdx]:
                     return LEAGUES.CT1
-                elif items[nextIdx].contains("t2"):
+                elif "t2" in items[nextIdx]:
                     return LEAGUES.CT2
-                elif items[nextIdx].contains("t3"):
+                elif "t3" in items[nextIdx]:
                     return LEAGUES.CT3
     return None
 
