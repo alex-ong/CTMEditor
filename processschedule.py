@@ -4,14 +4,16 @@ from .util import leagueString
 from .requestinfo import LEAGUE_LIST
 import pytz
 
+EXAMPLE_MSG = ":fire: i/username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC"
+
 # return whether we succeeded, as well as error message
 def processSchedule(s):
     if s.league is None:
         return (
             False,
             "Could not find league\n Please include one of these: "
-            + " ".join(LEAGUE_LIST)
-            + "\n",
+            + " ".join(LEAGUE_LIST) + "\n"
+            + EXAMPLE_MSG + "\n",
         )
 
     sheet, matchData, playerList, _ = loadSpreadsheetData(leagueString(s.league))
@@ -20,6 +22,7 @@ def processSchedule(s):
     if s.matchID is None:
         result = (
             "Could not find match id\n Make sure you wrote match # with a space.\n"
+            + EXAMPLE_MSG + "\n",
         )
         result += ValidMatchesString(matches, playerList)
         return (False, result)
@@ -34,18 +37,17 @@ def processSchedule(s):
         return (False, result)
 
     if not m.isValidMatch(playerList):
-        result += "Warning: match can't be played yet: Match " + str(s.matchID) + "\n"
-        result += str(m) + "\n"
-        result += "Don't worry, i'll still schedule it.\n"
-        return (False, result)
+        result += "Warning: match can't be played yet: Match " + str(s.matchID) + "(" + str(m) + ")\n"
+        result += "Don't worry, i'll still try to schedule it.\n"
 
-    result += (
-        "Attempting scheduling for "
-        + leagueString(s.league)
-        + " Match "
-        + str(s.matchID)
-        + "\n"
-    )
+    else:
+        result += (
+            "Attempting scheduling for "
+            + leagueString(s.league)
+            + " Match "
+            + str(s.matchID)
+            + "\n"
+        )
 
     date, time, tz = s.mapTime()
 

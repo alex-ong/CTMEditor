@@ -45,7 +45,7 @@ def tabulate(items):
 
 
 def Header():
-    return [":stencil: The Stencil (3.6):  <http://bit.ly/TheStencil>"]
+    return ["<:stencil:546785001568600074> The Stencil (3.6):  <http://bit.ly/TheStencil>"]
 
 
 def GenerateMatches(league):
