@@ -19,7 +19,7 @@ def processSchedule(s):
 
     if s.matchID is None:
         result = (
-            "Could not find match id\n Make sure it you wrote match # with a space.\n"
+            "Could not find match id\n Make sure you wrote match # with a space.\n"
         )
         result += ValidMatchesString(matches, playerList)
         return (False, result)
@@ -34,7 +34,7 @@ def processSchedule(s):
         return (False, result)
 
     if not m.isValidMatch(playerList):
-        result += "Warning: match can't be played yet: " + str(s.matchID) + "\n"
+        result += "Warning: match can't be played yet: Match " + str(s.matchID) + "\n"
         result += str(m) + "\n"
         result += "Don't worry, i'll still schedule it.\n"
         return (False, result)

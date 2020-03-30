@@ -3,16 +3,16 @@
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
         "sheet_id": "0",
         "images": {
-            "CTMCC winners.png": [ 0.05, 0.0, 0.9, 0.685 ],
-            "CTMCC losers.png": [ 0.05, 0.685, 0.75, 1.0 ]
+            "CTMCC winners.png": [ 0.0, 0.0, 1.0, 0.621 ],
+            "CTMCC losers.png": [ 0.0, 0.621, 1.0, 0.995 ]
         }
     },
     "fc": {
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
         "sheet_id": "1056668535",
         "images": {
-            "CTMFC winners.png": [ 0.05, 0.0, 0.885, 0.678 ],
-            "CTMFC losers.png": [ 0.05, 0.678, 0.75, 1.0 ]
+            "CTMFC winners.png": [ 0.0, 0.0, 1.0, 0.621 ],
+            "CTMFC losers.png": [ 0.0, 0.621, 1.0, 0.995 ]
         }
     },
     "ct1": {

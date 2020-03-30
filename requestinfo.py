@@ -141,28 +141,28 @@ class ReportInfo(object):
         # parse the score
         if not winner:
             return (None, 0, 0)
-
-        if winner.endswith(")"):  # typo.  Kirby703(3-1)
-            score = items[winnerIdx][-5:]
-        elif items[winnerIdx + 1].startswith("("):  # Kirby703 (3-1)
-            if len(items[winnerIdx + 1]) >= 4:
-                score = items[winnerIdx + 1]
+        try:
+            if winner.endswith(")"):  # typo.  Kirby703(3-1)
+                score = items[winnerIdx][-5:]
+            elif items[winnerIdx + 1].startswith("("):  # Kirby703 (3-1)
+                if len(items[winnerIdx + 1]) >= 4:
+                    score = items[winnerIdx + 1]
+                else:
+                    score = ""
+                    idx = winnerIdx + 1
+                    while len(score) < 4:
+                        idx += items[idx]
+                        idx += 1        
+            elif items[winnerIdx + 1][0] in "012345" and len(items[winnerIdx + 1]) == 3: # 3-1
+                score = "(" + items[winnerIdx + 1] + ")"
             else:
-                score = ""
-                idx = winnerIdx + 1
-                while len(score) < 4:
-                    idx += items[idx]
-                    idx += 1
-        elif (
-            items[winnerIdx + 1][0] in "012345" and len(items[winnerIdx + 1]) == 3
-        ):  # 3-1
-            score = "(" + items[winnerIdx + 1] + ")"
-        else:
+                return (winner, None, None)
+        except IndexError:
             return (winner, None, None)
 
         # should have "(3-1)" now
-        winnerScore = int(score[1])
-        loserScore = int(score[3])
+        winnerScore = safeInt(score[1])
+        loserScore = safeInt(score[3])
         return (winner, winnerScore, loserScore)
 
 
