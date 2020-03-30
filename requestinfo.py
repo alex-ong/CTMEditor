@@ -1,6 +1,6 @@
 import re
 from .util import LEAGUES
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def removeNonNumber(input):
@@ -166,7 +166,7 @@ class ReportInfo(object):
         return (winner, winnerScore, loserScore)
 
 
-NOW = ["now", "shortly", "immediately"]
+NOW = ["now", "shortly", "immediately", "soon", "momentarily"]
 MYSELF = ["i", ":fire:i", "🔥i"]
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann on Mar-17 at 0700 PDT
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 0700 PDT
@@ -189,27 +189,56 @@ class ScheduleInfo(object):
                 restreamer = reporter
         return restreamer
 
+    def mapNow(self):        
+        dt = datetime.utcnow()
+        dateString = dt.strftime("%b-%d")
+        timeString = dt.strftime("%H%M")
+        timeZone = "UTC"
+        return (dateString, timeString, timeZone)
+    
+    def mapRelative(self, amount, units):
+        print ("fucker", amount, units)
+        print (units in ["hour", "hours"])
+        dt = datetime.utcnow()
+        if units in ["hour", "hours"]:
+            dt = dt + timedelta(hours=float(amount))
+        elif units in ["minute", "minutes"]:
+            dt = dt + timedelta(minutes=float(amount))
+        else:
+            raise Exception("Couldn't find hours or minutes")
+        
+        dateString = dt.strftime("%b-%d")
+        timeString = dt.strftime("%H%M")
+        timeZone = "UTC"
+        return (dateString, timeString, timeZone)
+
     def mapTime(self):
         dateString = None
         timeString = None
         timeZone = None
+        
+        items = self.fullString.lower().split()
         try:
-            items = self.fullString.lower().split()
+            #right now. Shortly, immediately, now
             for string in NOW:
                 if string in items:
-                    dt = datetime.utcnow()
-                    dateString = dt.strftime("%b-%d")
-                    timeString = dt.strftime("%H%M")
-                    timeZone = "UTC"
-                    return (dateString, timeString, timeZone)
+                    return self.mapNow()
 
+            # relative time: in 90 minutes
+            inIndex = items.index("in") #restreaming in 5 hours etc.
+            if inIndex != -1:
+                return self.mapRelative(items[inIndex+1], items[inIndex+2])
+            
+            # exact date: on mar-30 at 1300 UTC            
             onIndex = items.index("on")
             atIndex = items.index("at")
+
             if onIndex != -1:
                 dateString = items[onIndex + 1]
             if atIndex != -1:
-                timeString = items[atIndex + 1]                
+                timeString = items[atIndex + 1]
                 timeZone = items[atIndex + 2]
-        except:  # pokemon
+        except: # pokemon
             pass
+
         return (dateString, timeString, timeZone)

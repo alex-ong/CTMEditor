@@ -4,7 +4,9 @@ from .util import leagueString
 from .requestinfo import LEAGUE_LIST
 import pytz
 
-EXAMPLE_MSG = ":fire: i/username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC"
+EXAMPLE_MSG = (":fire: username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC\n" +
+               ":fire: i        will restream :cc: Match 5 now\n" +
+               ":fire: i        will restream :cc: Match 5 in 35 minutes\n")
 
 # return whether we succeeded, as well as error message
 def processSchedule(s):
@@ -53,13 +55,13 @@ def processSchedule(s):
 
     result += "Date: " + str(date) + " Time: " + str(time) + " Timezone: " + str(tz) + "\n"
     if tz is None:
-        result += "Sorry, no timezone detected, Try: [ on MAR-04 at 0700 EST ]"
+        result += "Sorry, no timezone detected, Try: [ on MAR-04 at 0700 EST ] or [now] or [in 90 minutes]"
         return (False, result)
     if time is None:
-        result += "Sorry, no time detected. Try: [ on MAR-04 at 0700 EST ]"
+        result += "Sorry, no time detected. Try: [ on MAR-04 at 0700 EST ] or [now] or [in 90 minutes]"
         return (False, result)
     if date is None:
-        result += "Sorry, no date detected. Try: [ on MAR-04 at 0700 EST ]"
+        result += "Sorry, no date detected. Try: [ on MAR-04 at 0700 EST ] or [now] or [in 90 minutes]"
         return (False, result)
     
     # now to fix the goddamn time.
