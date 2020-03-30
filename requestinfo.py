@@ -8,7 +8,9 @@ def removeNonNumber(input):
     return result
 
 
-REPORT_PREFIX = ":redheart:"
+REPORT_PREFIXES = ["<:redheart:545715946325540893>"]
+REPORT_PREFIX = "<:redheart:545715946325540893>"
+
 SCHEDULE_PREFIX = "🔥"
 SCHEDULE_PREFIXES = ["🔥", ":fire:", ":flame:"]
 
@@ -19,7 +21,9 @@ SCHEDULE = 1
 # returns if there are multiple "fire" or "heart" emojis.
 def isMultipleMessage(string):
     number = 0
-    number += string.count(REPORT_PREFIX)
+    for item in REPORT_PREFIXES:
+        number += string.count(item)
+    
     for item in SCHEDULE_PREFIXES:
         number += string.count(item)
     if number > 1:
@@ -39,12 +43,19 @@ def ReportingOrScheduling(string):
         return None
 
 
-CC = ":cc:"
-FC = ":fc:"
-CT1 = ":ct::t1:"
-CT2 = ":ct::t2:"
-CT3 = ":ct::t3:"
-CT = ":ct:"
+
+ME = "<:me:662518884057743391>"
+CC = "<:cc:662518277091885066>"
+FC = "<:fc:662518740159561738>"
+T1 = "<:t1:688533378303131679>"
+T2 = "<:t2:688533342563336271>"
+T3 = "<:t3:688534577655972026>"
+CT = "<:ct:688439996478259294>"
+
+CT1 = CT + T1
+CT2 = CT + T2
+CT3 = CT + T3
+
 
 LEAGUE_LIST = [CC, FC, CT1, CT2, CT3]
 
