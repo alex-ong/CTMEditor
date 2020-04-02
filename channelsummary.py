@@ -68,9 +68,10 @@ def GenerateScores(league, data, username_lookup):
     
     result = []
     if username_lookup is not None:
-        for player in players:        
-            if player.twitch in username_lookup:
-                player.discord = username_lookup[player.twitch]
+        for player in players:      
+            twitch_lower = player.twitch.lower()  
+            if twitch_lower in username_lookup:
+                player.discord = username_lookup[twitch_lower]
 
     # get minimum column widths:    
     twitch_len = max([len(player.twitch) for player in players])
