@@ -68,19 +68,32 @@ def GenerateScores(league, data):
     
     result = []
 
+    # get minimum column widths:    
+    twitch_len = max([len(player.twitch) for player in players])
+    discord_len = max([len(str(player.discord)) for player in players])
+    country_len = max([len(player.country) for player in players])
+    
+    twitch_len = max(twitch_len, len("Twitch"))
+    discord_len = max(discord_len, len("Discord"))
+    country_len = max(country_len, len("Country"))
+
     message = "**" + MessageHeader(league) + " - Qualifying Scores**"
     result.append(message)
     
     for i, chunk in enumerate(chunks(players, 16)):
         message = "```javascript\n"
-        title = ["Seed", "Twitch".ljust(20), "Discord".ljust(20), "Country".ljust(15), "Score".ljust(8)]
+        title = ["Seed", 
+                "Twitch".ljust(twitch_len), 
+                "Discord".ljust(discord_len), 
+                "Country".ljust(country_len), 
+                "Score".ljust(8)]
         message += tabulate(title)
         message += "-" * (len(tabulate(title)) - 1) + "\n"
         for player in chunk:
             line = [str(player.seed).rjust(4),
-                str(player.twitch).ljust(20),
-                str(player.discord).ljust(20),
-                str(player.country).ljust(15),
+                str(player.twitch).ljust(twitch_len),
+                str(player.discord).ljust(discord_len),
+                str(player.country).ljust(country_len),
                 str(player.score).ljust(8)]
             message += tabulate(line)
         message += "```\n"
@@ -105,18 +118,23 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
     results = []
     matches = ConvertToMatches(game_data)
     
+    # get minimum column widths:
+    minPlayer1 = max([len(match.player1) for match in matches])
+    minPlayer2 = max([len(match.player2) for match in matches])
+    ultraMin = max(minPlayer1,minPlayer2, len("Player1"))
+
     # one message every 8 games.
     for i, chunk in enumerate(chunkMatches(matches, rounds)):
-        message = "**" + MessageHeader(league) + " " +  rounds[i][0].value + "**\n"      
+        message = "**" + MessageHeader(league) + " - " +  rounds[i][0].value + "**\n"      
         message += "Due on or before: " + rounds[i][2].value + "\n"
         message += "```javascript\n"
-        title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Score"]
+        title = ["M#", "Player1".ljust(ultraMin), "Player2".ljust(ultraMin), "Score"]
         message += tabulate(title)
         message += "-" * (len(tabulate(title)) - 1) + "\n"
         for match in chunk:
             line = [str(match.matchNo).rjust(2),
-                str(match.player1).ljust(20),
-                str(match.player2).ljust(20),
+                str(match.player1).ljust(ultraMin),
+                str(match.player2).ljust(ultraMin),
                 match.printableScore().rjust(5),]
             message += tabulate(line)        
         message += "```\n"
@@ -130,10 +148,15 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
     matches = GetValidMatches(matches, player_names)
     if len(matches) == 0:
         return "`All matches completed!`"
+
+    minPlayer1 = max([len(match.player1) for match in matches])
+    minPlayer2 = max([len(match.player2) for match in matches])
+    ultraMin = max(minPlayer1,minPlayer2, len("Player1"))
+
     results = []
-    message = "**" + MessageHeader(league) + " Playable Matches" + "**"
+    message = "**" + MessageHeader(league) + " -  Playable Matches" + "**"
     message += "```\n"
-    title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Due".ljust(5),
+    title = ["M#", "Player1".ljust(ultraMin), "Player2".ljust(ultraMin), "Due".ljust(5),
              "Match time".ljust(19), "Restreamer".ljust(10)]
     message += tabulate(title)
     message += "-" * (len(tabulate(title)) - 1) + "\n"
@@ -148,8 +171,8 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
             rst = match.restreamer
             rst = rst if len(rst) <= 10 else rst[:7] + "..."
             line = [str(match.matchNo).rjust(2),
-                str(match.player1).ljust(20),
-                str(match.player2).ljust(20),
+                str(match.player1).ljust(ultraMin),
+                str(match.player2).ljust(ultraMin),
                 str(rounds[i][2].value).ljust(5),
                 str(match.matchTime).ljust(19),
                 rst.ljust(10)]
