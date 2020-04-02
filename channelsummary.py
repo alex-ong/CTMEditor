@@ -1,7 +1,9 @@
 from .spreadsheetdata import loadSpreadsheetData
 from .matchinfo import ConvertToMatches, GetValidMatches
 from .util import modulePath
+from .scoreentry import ScoreEntry
 from os.path import join
+
 
 
 import requests
@@ -12,13 +14,19 @@ import io
 import discord as discordpy
 
 bracketRoot = "http://35.213.253.125:8080/"
-
+leagues = {"me": "Masters Event",
+           "cc": "Challengers Circuit",
+           "fc": "Futures Circuit",
+           "ct1": "Community Tournament 1",
+           "ct2": "Community Tournament 2",
+           "ct3": "Community Tournament 3"
+          }
 
 def GenerateChannelMessages(league):
     result = []
     result.extend(Header())
     data = loadSpreadsheetData(league)
-    #result.extend(GenerateScores(league, data))
+    result.extend(GenerateScores(league, data))
     result.extend(GenerateMatches(league, data))
     result.extend(GenerateScreenshot(league))
 
@@ -49,52 +57,81 @@ def tabulate(items):
 def Header():
     return ["<:stencil:546785001568600074> The Stencil (3.6):  <http://bit.ly/TheStencil>"]
 
+def MessageHeader(league):
+    return "Classic Tetris Monthly - " + leagues[league]
 
 def GenerateScores(league, data):
     _, _, player_data, _ = data
+    players = []
     for player in player_data:
-        seed, twitch, country, score = player[1].value
+        players.append(ScoreEntry(player))
+    
+    result = []
+
+    message = "**" + MessageHeader(league) + " - Qualifying Scores**"
+    result.append(message)
+    
+    for i, chunk in enumerate(chunks(players, 16)):
+        message = "```javascript\n"
+        title = ["Seed", "Twitch".ljust(20), "Discord".ljust(20), "Country".ljust(15), "Score".ljust(8)]
+        message += tabulate(title)
+        message += "-" * (len(tabulate(title)) - 1) + "\n"
+        for player in chunk:
+            line = [str(player.seed).rjust(4),
+                str(player.twitch).ljust(20),
+                str(player.discord).ljust(20),
+                str(player.country).ljust(15),
+                str(player.score).ljust(8)]
+            message += tabulate(line)
+        message += "```\n"
+        result.append(message)
+    result.append(".\n"*3)
+    return result
+
+            
+
 
 
 def GenerateMatches(league, data):
     sheet, game_data, player_data, rounds = data
     player_names = [player[0].value for player in player_data]
     result = []
-    result.extend(GenerateAllMatches(sheet, game_data, player_names, rounds))
-    result.extend(GenerateUnplayedMatches(sheet, game_data, player_names, rounds))
+    result.extend(GenerateAllMatches(game_data, rounds, player_names, league))
+    result.extend(GenerateUnplayedMatches(game_data, rounds, player_names, league))
     return result
 
 
-def GenerateAllMatches(sheet, game_data, player_names, rounds):
+def GenerateAllMatches(game_data, rounds, player_names, league):
     results = []
     matches = ConvertToMatches(game_data)
     
     # one message every 8 games.
-    for i, chunk in enumerate(chunkMatches(matches, rounds)):        
-        message = rounds[i][0].value + ".  Due on or before: " + rounds[i][2].value + "\n"
+    for i, chunk in enumerate(chunkMatches(matches, rounds)):
+        message = "**" + MessageHeader(league) + " " +  rounds[i][0].value + "**\n"      
+        message += "Due on or before: " + rounds[i][2].value + "\n"
         message += "```javascript\n"
         title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Score"]
         message += tabulate(title)
         message += "-" * (len(tabulate(title)) - 1) + "\n"
-        message += "```\n"
         for match in chunk:
             line = [str(match.matchNo).rjust(2),
                 str(match.player1).ljust(20),
                 str(match.player2).ljust(20),
                 match.printableScore().rjust(5),]
-            message += tabulate(line)
+            message += tabulate(line)        
         message += "```\n"
+        message += (".\n"*3)
         results.append(message)
     return results
 
 
-def GenerateUnplayedMatches(sheet, game_data, player_names, rounds):
+def GenerateUnplayedMatches(game_data, rounds, player_names, league):
     matches = ConvertToMatches(game_data)
     matches = GetValidMatches(matches, player_names)
     if len(matches) == 0:
         return "`All matches completed!`"
     results = []
-    message = "**Playable Matches:** \n"
+    message = "**" + MessageHeader(league) + " Playable Matches" + "**"
     message += "```\n"
     title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Due".ljust(5),
              "Match time".ljust(19), "Restreamer".ljust(10)]
@@ -118,6 +155,7 @@ def GenerateUnplayedMatches(sheet, game_data, player_names, rounds):
                 rst.ljust(10)]
             message += tabulate(line)
         message += "```\n"
+        message += (".\n"*3)
         results.append(message)
 
     return results
