@@ -11,7 +11,8 @@ def processReport(r):
         return (False,
             "Could not find league\n Please include one of these: " + " ".join(LEAGUE_LIST) + "\n" + EXAMPLE_MSG)
 
-    sheet, matchData, playerList, _ = loadSpreadsheetData(leagueString(r.league))
+    sheet, matchData, player_data, _ = loadSpreadsheetData(leagueString(r.league))
+    playerList = [player[0].value for player in player_data]
     matches = ConvertToMatches(matchData)
 
     if r.matchID is None:

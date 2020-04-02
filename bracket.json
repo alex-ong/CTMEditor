@@ -30,5 +30,13 @@
             "CTMCT2-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
             "CTMCT2-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
         }
+    },
+    "ct3": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "1384960327",
+        "images": {
+            "CTMCT3-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
+            "CTMCT3-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
+        }
     }
 }

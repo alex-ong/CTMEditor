@@ -17,7 +17,9 @@ bracketRoot = "http://35.213.253.125:8080/"
 def GenerateChannelMessages(league):
     result = []
     result.extend(Header())
-    result.extend(GenerateMatches(league))
+    data = loadSpreadsheetData(league)
+    #result.extend(GenerateScores(league, data))
+    result.extend(GenerateMatches(league, data))
     result.extend(GenerateScreenshot(league))
 
     return result
@@ -31,7 +33,7 @@ def chunks(lst, n):
         yield lst[i : i + n]
 
 def chunkMatches(matches, rounds):
-    chunks =  [[] for _ in range(len(rounds))]
+    chunks = [[] for _ in range(len(rounds))]
 
     for match in matches:
         for i, round in enumerate(rounds):
@@ -48,8 +50,15 @@ def Header():
     return ["<:stencil:546785001568600074> The Stencil (3.6):  <http://bit.ly/TheStencil>"]
 
 
-def GenerateMatches(league):
-    sheet, game_data, player_names, rounds = loadSpreadsheetData(league)
+def GenerateScores(league, data):
+    _, _, player_data, _ = data
+    for player in player_data:
+        seed, twitch, country, score = player[1].value
+
+
+def GenerateMatches(league, data):
+    sheet, game_data, player_data, rounds = data
+    player_names = [player[0].value for player in player_data]
     result = []
     result.extend(GenerateAllMatches(sheet, game_data, player_names, rounds))
     result.extend(GenerateUnplayedMatches(sheet, game_data, player_names, rounds))
@@ -59,26 +68,20 @@ def GenerateMatches(league):
 def GenerateAllMatches(sheet, game_data, player_names, rounds):
     results = []
     matches = ConvertToMatches(game_data)
-    message = "**Match List:**\n"
-    message += "```javascript\n"
-    title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Score"]
-    message += tabulate(title)
-    message += "-" * (len(tabulate(title)) - 1) + "\n"
-    message += "```\n"
-    results.append(message)
-
+    
     # one message every 8 games.
-    for i, chunk in enumerate(chunkMatches(matches, rounds)):
+    for i, chunk in enumerate(chunkMatches(matches, rounds)):        
         message = rounds[i][0].value + ".  Due on or before: " + rounds[i][2].value + "\n"
         message += "```javascript\n"
-        
+        title = ["M#", "Player1".ljust(20), "Player2".ljust(20), "Score"]
+        message += tabulate(title)
+        message += "-" * (len(tabulate(title)) - 1) + "\n"
+        message += "```\n"
         for match in chunk:
-            line = [
-                str(match.matchNo).rjust(2),
+            line = [str(match.matchNo).rjust(2),
                 str(match.player1).ljust(20),
                 str(match.player2).ljust(20),
-                match.printableScore().rjust(5),
-            ]
+                match.printableScore().rjust(5),]
             message += tabulate(line)
         message += "```\n"
         results.append(message)
@@ -107,14 +110,12 @@ def GenerateUnplayedMatches(sheet, game_data, player_names, rounds):
         for match in chunk:
             rst = match.restreamer
             rst = rst if len(rst) <= 10 else rst[:7] + "..."
-            line = [
-                str(match.matchNo).rjust(2),
+            line = [str(match.matchNo).rjust(2),
                 str(match.player1).ljust(20),
                 str(match.player2).ljust(20),
                 str(rounds[i][2].value).ljust(5),
                 str(match.matchTime).ljust(19),
-                rst.ljust(10)
-            ]
+                rst.ljust(10)]
             message += tabulate(line)
         message += "```\n"
         results.append(message)
@@ -142,3 +143,4 @@ def GenerateScreenshot(league):
                 picture = discordpy.File(image_data, fileName)
                 result.append(picture)
     return result
+

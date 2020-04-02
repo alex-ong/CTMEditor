@@ -37,11 +37,10 @@ def loadSpreadsheetData(league):
     sheet = spreadsheet.worksheet(sheetID)
 
     game_data = SplitDatabaseRows(sheet.range(gRange))
-    player_names = sheet.range(pRange)
-    player_names = [item.value for item in player_names]  # convert to string
+    player_data = SplitDatabaseRows(sheet.range(pRange))
     round_data = SplitDatabaseRows(sheet.range(dRange))
     
-    return (sheet, game_data, player_names, round_data)
+    return (sheet, game_data, player_data, round_data)
 
 #splits from a bunch of cells into lists of rows.
 def SplitDatabaseRows(fullData):

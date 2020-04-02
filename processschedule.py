@@ -19,6 +19,7 @@ def processSchedule(s):
         )
 
     sheet, matchData, playerList, _ = loadSpreadsheetData(leagueString(s.league))
+    playerList = [player[0].value for player in player_data]
     matches = ConvertToMatches(matchData)
 
     if s.matchID is None:
