@@ -44,7 +44,7 @@ def processRequest(user, string):
 
 
 # expects "cc", "fc" etc.
-def updateChannel(context, league):
+def updateChannel(context, league, usernameLookup=None):
     global LOCK
     try:
         LOCK.acquire()
@@ -57,7 +57,7 @@ def updateChannel(context, league):
                     context.delete_message(message)
             except:
                 print("Message not found: " + str(messageID))
-        newMessages = GenerateChannelMessages(league)
+        newMessages = GenerateChannelMessages(league, usernameLookup)
         channelSettings.messages = []
         for string in newMessages:
             if isinstance(string, discordpy.File):
@@ -84,7 +84,7 @@ def checkChannelPeon(context):
 
 
 # call this to save which channel to write our results to.
-def setupChannel(context, league):
+def setupChannel(context, league, usernameLookup):
     global LOCK
     try:
         LOCK.acquire()
@@ -94,7 +94,7 @@ def setupChannel(context, league):
         if league == "reporting":
             context.send_message("This is now the channel where match reports are due.")
             return
-        updateChannel(context, league)
+        updateChannel(context, league, usernameLookup)
         # delete requestors message
         context.delete_message(context.message)
     finally:

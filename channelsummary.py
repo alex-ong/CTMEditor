@@ -22,11 +22,11 @@ leagues = {"me": "Masters Event",
            "ct3": "Community Tournament 3"
           }
 
-def GenerateChannelMessages(league):
+def GenerateChannelMessages(league, username_lookup):
     result = []
     result.extend(Header())
     data = loadSpreadsheetData(league)
-    result.extend(GenerateScores(league, data))
+    result.extend(GenerateScores(league, data, username_lookup))
     result.extend(GenerateMatches(league, data))
     result.extend(GenerateScreenshot(league))
 
@@ -60,13 +60,17 @@ def Header():
 def MessageHeader(league):
     return "Classic Tetris Monthly - " + leagues[league]
 
-def GenerateScores(league, data):
+def GenerateScores(league, data, username_lookup):
     _, _, player_data, _ = data
     players = []
     for player in player_data:
         players.append(ScoreEntry(player))
     
     result = []
+    if username_lookup is not None:
+        for player in players:        
+            if player.twitch in username_lookup:
+                player.discord = username_lookup[player.twitch]
 
     # get minimum column widths:    
     twitch_len = max([len(player.twitch) for player in players])
