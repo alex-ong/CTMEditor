@@ -17,9 +17,9 @@ bracketRoot = "http://35.213.253.125:8080/"
 leagues = {"me": "Masters Event",
            "cc": "Challengers Circuit",
            "fc": "Futures Circuit",
-           "ct1": "Community Tournament 1",
-           "ct2": "Community Tournament 2",
-           "ct3": "Community Tournament 3"
+           "ct1": "Community Tournament TIER ONE",
+           "ct2": "Community Tournament TIER TWO",
+           "ct3": "Community Tournament TIER THREE"
           }
 
 def GenerateChannelMessages(league, username_lookup):
@@ -89,13 +89,14 @@ def GenerateScores(league, data, username_lookup):
     
     for i, chunk in enumerate(chunks(players, 16)):
         message = "```javascript\n"
-        title = ["Seed", 
-                "Twitch".ljust(twitch_len), 
-                "Discord".ljust(discord_len), 
-                "Country".ljust(country_len), 
-                "Score".ljust(8)]
-        message += tabulate(title)
-        message += "-" * (len(tabulate(title)) - 1) + "\n"
+        if i == 0:
+            title = ["Seed", 
+                    "Twitch".ljust(twitch_len), 
+                    "Discord".ljust(discord_len), 
+                    "Country".ljust(country_len), 
+                    "Score".ljust(8)]
+            message += tabulate(title)
+            message += "-" * (len(tabulate(title)) - 1) + "\n"
         for player in chunk:
             line = [str(player.seed).rjust(4),
                 str(player.twitch).ljust(twitch_len),
@@ -105,7 +106,7 @@ def GenerateScores(league, data, username_lookup):
             message += tabulate(line)
         message += "```\n"
         result.append(message)
-    result.append(".\n"*3)
+    result.append(".\n"*2)
     return result
 
             
@@ -133,7 +134,8 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
     # one message every 8 games.
     for i, chunk in enumerate(chunkMatches(matches, rounds)):
         message = "**" + MessageHeader(league) + " - " +  rounds[i][0].value + "**\n"      
-        message += "Due on or before: " + rounds[i][2].value + "\n"
+        message += "Due on or before: " + rounds[i][2].value + "\n"        
+        message += rounds[i][3].value + "\n"
         message += "```javascript\n"
         title = ["M#", "Player1".ljust(ultraMin), "Player2".ljust(ultraMin), "Score"]
         message += tabulate(title)
@@ -145,7 +147,7 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
                 match.printableScore().rjust(5),]
             message += tabulate(line)        
         message += "```\n"
-        message += (".\n"*3)
+        message += (".\n"*2)
         results.append(message)
     return results
 
@@ -185,7 +187,7 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
                 rst.ljust(10)]
             message += tabulate(line)
         message += "```\n"
-        message += (".\n"*3)
+        message += (".\n"*2)
         results.append(message)
 
     return results
