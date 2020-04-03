@@ -17,6 +17,22 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
 )
 gc = gspread.authorize(credentials)
 
+def refresh_credentials():
+    global gc
+    gc = gspread.authorize(credentials)
+
+def safe_get_sheet(spreadsheet_id, sheet_id, first=True):
+    global gc
+    try:
+        ss = gc.open_by_key(spreadsheet_id)
+        result = ss.worksheet(sheet_id)
+        return result
+    except gspread.exceptions.APIError:
+        if not first:
+            raise
+        else:
+            refresh_credentials()
+            return safe_get_sheet(spreadsheet_id, sheet_id, False)
 
 def getSheetInfo(league):
     sheetID = None
@@ -33,13 +49,12 @@ def getSheetInfo(league):
 
 def loadSpreadsheetData(league):
     spreadsheetID, sheetID, gRange, pRange, dRange = getSheetInfo(league)
-    spreadsheet = gc.open_by_key(spreadsheetID)
-    sheet = spreadsheet.worksheet(sheetID)
+    sheet = safe_get_sheet(spreadsheetID,sheetID)
 
     game_data = SplitDatabaseRows(sheet.range(gRange))
     player_data = SplitDatabaseRows(sheet.range(pRange))
     round_data = SplitDatabaseRows(sheet.range(dRange))
-    
+
     return (sheet, game_data, player_data, round_data)
 
 #splits from a bunch of cells into lists of rows.

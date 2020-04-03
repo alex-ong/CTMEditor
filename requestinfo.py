@@ -66,6 +66,10 @@ def safeInt(item):
     except:
         return None
 
+def safeIndex(items, search):
+    if search in items:
+        return items.index(search)
+    return -1
 
 def findLeague(items):
     for i, item in enumerate(items):
@@ -197,8 +201,8 @@ class ScheduleInfo(object):
         return (dateString, timeString, timeZone)
     
     def mapRelative(self, amount, units):
-        print ("fucker", amount, units)
-        print (units in ["hour", "hours"])
+        print("fucker", amount, units)
+        print(units in ["hour", "hours"])
         dt = datetime.utcnow()
         if units in ["hour", "hours"]:
             dt = dt + timedelta(hours=float(amount))
@@ -218,27 +222,31 @@ class ScheduleInfo(object):
         timeZone = None
         
         items = self.fullString.lower().split()
-        try:
-            #right now. Shortly, immediately, now
-            for string in NOW:
-                if string in items:
-                    return self.mapNow()
-
-            # relative time: in 90 minutes
-            inIndex = items.index("in") #restreaming in 5 hours etc.
-            if inIndex != -1:
-                return self.mapRelative(items[inIndex+1], items[inIndex+2])
+        
             
-            # exact date: on mar-30 at 1300 UTC            
-            onIndex = items.index("on")
-            atIndex = items.index("at")
-
+        #right now. Shortly, immediately, now
+        for string in NOW:
+            if string in items:
+                print("now")
+                return self.mapNow()
+            
+        # relative time: in 90 minutes        
+        inIndex = safeIndex(items,"in") #restreaming in 5 hours etc.
+        if inIndex != -1:
+            print("in x hours")
+            return self.mapRelative(items[inIndex + 1], items[inIndex + 2])
+        
+        # exact date: on mar-30 at 1300 UTC
+        onIndex = safeIndex(items,"on")
+        atIndex = safeIndex(items,"at")
+        print(onIndex, atIndex)
+        try:
             if onIndex != -1:
                 dateString = items[onIndex + 1]
             if atIndex != -1:
                 timeString = items[atIndex + 1]
                 timeZone = items[atIndex + 2]
-        except: # pokemon
+        except:
             pass
 
         return (dateString, timeString, timeZone)

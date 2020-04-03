@@ -18,7 +18,7 @@ def processSchedule(s):
             + EXAMPLE_MSG + "\n",
         )
 
-    sheet, matchData, playerList, _ = loadSpreadsheetData(leagueString(s.league))
+    sheet, matchData, player_data, _ = loadSpreadsheetData(leagueString(s.league))
     playerList = [player[0].value for player in player_data]
     matches = ConvertToMatches(matchData)
 
