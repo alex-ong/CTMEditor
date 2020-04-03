@@ -187,9 +187,10 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
                 rst.ljust(10)]
             message += tabulate(line)
         message += "```\n"
-        message += (".\n"*2)
+        
         results.append(message)
 
+    results.append(".\n"*2)
     return results
 
 

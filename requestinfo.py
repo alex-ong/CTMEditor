@@ -175,7 +175,7 @@ MYSELF = ["i", ":fire:i", "🔥i"]
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann on Mar-17 at 0700 PDT
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 0700 PDT
 class ScheduleInfo(object):
-    def __init__(self, reporter, fullString):
+    def __init__(self, reporter, fullString):        
         self.fullString = fullString
         self.restreamer = self.findRestreamer(fullString, reporter)
         items = fullString.split()
@@ -184,8 +184,8 @@ class ScheduleInfo(object):
 
     def findRestreamer(self, fullString, reporter):
         items = fullString.lower().split()
-        will_idx = items.index("will")
-        restream_idx = items.index("restream")
+        will_idx = safeIndex(items, "will")
+        restream_idx = safeIndex(items, "restream")
         restreamer = reporter
         if will_idx != -1 and will_idx == restream_idx - 1:
             restreamer = items[will_idx - 1]
@@ -193,7 +193,7 @@ class ScheduleInfo(object):
                 restreamer = reporter
         return restreamer
 
-    def mapNow(self):        
+    def mapNow(self):
         dt = datetime.utcnow()
         dateString = dt.strftime("%b-%d")
         timeString = dt.strftime("%H%M")
@@ -224,13 +224,13 @@ class ScheduleInfo(object):
         items = self.fullString.lower().split()
         
             
-        #right now. Shortly, immediately, now
+        #right now.  Shortly, immediately, now
         for string in NOW:
             if string in items:
                 print("now")
                 return self.mapNow()
             
-        # relative time: in 90 minutes        
+        # relative time: in 90 minutes
         inIndex = safeIndex(items,"in") #restreaming in 5 hours etc.
         if inIndex != -1:
             print("in x hours")
