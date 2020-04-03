@@ -165,7 +165,7 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
     results = []
     message = "**" + MessageHeader(league) + " -  Playable Matches" + "**"
     message += "```\n"
-    title = ["M#", "Player1".ljust(ultraMin), "Player2".ljust(ultraMin), "Due".ljust(5),
+    title = ["M#", "Player1".ljust(ultraMin), "Player2".ljust(ultraMin), "Due".ljust(6),
              "Match time".ljust(19), "Restreamer".ljust(10)]
     message += tabulate(title)
     message += "-" * (len(tabulate(title)) - 1) + "\n"
@@ -182,7 +182,7 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
             line = [str(match.matchNo).rjust(2),
                 str(match.player1).ljust(ultraMin),
                 str(match.player2).ljust(ultraMin),
-                str(rounds[i][2].value).ljust(5),
+                str(rounds[i][2].value).ljust(6),
                 str(match.matchTime).ljust(19),
                 rst.ljust(10)]
             message += tabulate(line)
