@@ -174,16 +174,28 @@ NOW = ["now", "shortly", "immediately", "soon", "momentarily"]
 MYSELF = ["i", ":fire:i", "🔥i"]
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann on Mar-17 at 0700 PDT
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 0700 PDT
+# :fire: Cancel :cc: match #20
+
 class ScheduleInfo(object):
     def __init__(self, reporter, fullString):        
         self.fullString = fullString
-        self.restreamer = self.findRestreamer(fullString, reporter)
-        items = fullString.split()
+        
+        items = fullString.lower().split()
+        self.is_cancelled = self.checkCancel(items)
         self.league = findLeague(items)
         self.matchID = findMatchID(items)
+        
+        self.restreamer = self.findRestreamer(items, reporter)
+        
+    def checkCancel(self, items):
+        cancel_idx = safeIndex(items, "cancel")
+        if cancel_idx == 1:
+            return True
+        elif items[0].endswith("cancel"): # ":fire:cancel"
+            return True
+        return False 
 
-    def findRestreamer(self, fullString, reporter):
-        items = fullString.lower().split()
+    def findRestreamer(self, items, reporter):
         will_idx = safeIndex(items, "will")
         restream_idx = safeIndex(items, "restream")
         restreamer = reporter

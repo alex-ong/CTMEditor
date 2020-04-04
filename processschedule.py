@@ -6,7 +6,8 @@ import pytz
 
 EXAMPLE_MSG = (":fire: username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC\n" +
                ":fire: i        will restream :cc: Match 5 now\n" +
-               ":fire: i        will restream :cc: Match 5 in 35 minutes\n")
+               ":fire: i        will restream :cc: Match 5 in 35 minutes\n"
+               ":fire: Cancel :cc: Match 5\n")
 
 # return whether we succeeded, as well as error message
 def processSchedule(s):
@@ -51,6 +52,12 @@ def processSchedule(s):
             + str(s.matchID)
             + "\n"
         )
+    
+    if s.is_cancelled:
+        result += "Cancelled match."
+        m.writeRestreamInfo("", "", sheet)
+        return (True, result)
+    
 
     date, time, tz = s.mapTime()
 
