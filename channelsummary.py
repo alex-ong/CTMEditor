@@ -155,8 +155,13 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
 def GenerateUnplayedMatches(game_data, rounds, player_names, league):
     matches = ConvertToMatches(game_data)
     matches = GetValidMatches(matches, player_names)
+
+    #exclude finals
+    finals_matchs = int(rounds[-2][1].value)
+    matches = list(filter(lambda match: match.matchNo <= finals_matchs, matches))
+
     if len(matches) == 0:
-        return "`All matches completed!`"
+        return "`Ready for finals!`"
 
     minPlayer1 = max([len(match.player1) for match in matches])
     minPlayer2 = max([len(match.player2) for match in matches])
