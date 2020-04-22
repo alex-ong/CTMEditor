@@ -161,7 +161,7 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
     matches = list(filter(lambda match: match.matchNo <= finals_matchs, matches))
 
     if len(matches) == 0:
-        return "`Ready for finals!`"
+        return ["`Ready for finals!`"]
 
     minPlayer1 = max([len(match.player1) for match in matches])
     minPlayer2 = max([len(match.player2) for match in matches])
