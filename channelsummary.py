@@ -7,7 +7,6 @@ from os.path import join
 
 import requests
 import json
-import time
 import io
 
 import discord as discordpy

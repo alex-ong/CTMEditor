@@ -3,7 +3,7 @@ def safeInt(value):
         return None
     try:
         return int(value)
-    except:
+    except (ValueError, TypeError):
         return None
 
 

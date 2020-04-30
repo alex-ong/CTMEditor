@@ -2,7 +2,7 @@ from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
 from .spreadsheetdata import loadSpreadsheetData
 from .util import leagueString
 from .requestinfo import LEAGUE_LIST
-import pytz
+
 
 EXAMPLE_MSG = (
     ":fire: username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC\n"

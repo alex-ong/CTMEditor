@@ -62,7 +62,7 @@ LEAGUE_LIST = [CC, FC, CT1, CT2, CT3]
 def safeInt(item):
     try:
         return int(item)
-    except:
+    except (ValueError, TypeError):
         return None
 
 
@@ -261,7 +261,7 @@ class ScheduleInfo(object):
             if atIndex != -1:
                 timeString = items[atIndex + 1]
                 timeZone = items[atIndex + 2]
-        except:
+        except:  # noqa: E722
             pass
 
         return (dateString, timeString, timeZone)
