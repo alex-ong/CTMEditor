@@ -4,10 +4,12 @@ from .util import leagueString
 from .requestinfo import LEAGUE_LIST
 import pytz
 
-EXAMPLE_MSG = (":fire: username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC\n" +
-               ":fire: i        will restream :cc: Match 5 now\n" +
-               ":fire: i        will restream :cc: Match 5 in 35 minutes\n"
-               ":fire: Cancel :cc: Match 5\n")
+EXAMPLE_MSG = (
+    ":fire: username will restream :cc: Match 5 (this_is vs ignored) on apr-01 at hhmm UTC\n"
+    + ":fire: i        will restream :cc: Match 5 now\n"
+    + ":fire: i        will restream :cc: Match 5 in 35 minutes\n"
+    ":fire: Cancel :cc: Match 5\n"
+)
 
 # return whether we succeeded, as well as error message
 def processSchedule(s):
@@ -15,8 +17,10 @@ def processSchedule(s):
         return (
             False,
             "Could not find league\n Please include one of these: "
-            + " ".join(LEAGUE_LIST) + "\n"
-            + EXAMPLE_MSG + "\n",
+            + " ".join(LEAGUE_LIST)
+            + "\n"
+            + EXAMPLE_MSG
+            + "\n",
         )
 
     sheet, matchData, player_data, _ = loadSpreadsheetData(leagueString(s.league))
@@ -26,7 +30,8 @@ def processSchedule(s):
     if s.matchID is None:
         result = (
             "Could not find match id\n Make sure you wrote match # with a space.\n"
-            + EXAMPLE_MSG + "\n",
+            + EXAMPLE_MSG
+            + "\n",
         )
         result += ValidMatchesString(matches, playerList)
         return (False, result)
@@ -41,7 +46,13 @@ def processSchedule(s):
         return (False, result)
 
     if not m.isValidMatch(playerList):
-        result += "Warning: match can't be played yet: Match " + str(s.matchID) + "(" + str(m) + ")\n"
+        result += (
+            "Warning: match can't be played yet: Match "
+            + str(s.matchID)
+            + "("
+            + str(m)
+            + ")\n"
+        )
         result += "Don't worry, i'll still try to schedule it.\n"
 
     else:
@@ -52,16 +63,17 @@ def processSchedule(s):
             + str(s.matchID)
             + "\n"
         )
-    
+
     if s.is_cancelled:
         result += "Cancelled match."
         m.writeRestreamInfo("", "", sheet)
         return (True, result)
-    
 
     date, time, tz = s.mapTime()
 
-    result += "Date: " + str(date) + " Time: " + str(time) + " Timezone: " + str(tz) + "\n"
+    result += (
+        "Date: " + str(date) + " Time: " + str(time) + " Timezone: " + str(tz) + "\n"
+    )
     if tz is None:
         result += "Sorry, no timezone detected, Try: [ on MAR-04 at 0700 EST ] or [now] or [in 90 minutes]"
         return (False, result)
@@ -71,13 +83,13 @@ def processSchedule(s):
     if date is None:
         result += "Sorry, no date detected. Try: [ on MAR-04 at 0700 EST ] or [now] or [in 90 minutes]"
         return (False, result)
-    
+
     # now to fix the goddamn time.
     # todo, fix and change to UTC. good luck future alex.
 
     result += "Restreamer: " + str(s.restreamer) + "\n"
     # on success, write back to the spreadsheet lmao.
-    timestampstring = " ".join(str(item) for item in [date,time,tz])
+    timestampstring = " ".join(str(item) for item in [date, time, tz])
 
     m.writeRestreamInfo(timestampstring, s.restreamer, sheet)
     result += "Successfully updated.\n"

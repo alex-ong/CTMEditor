@@ -17,9 +17,11 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
 )
 gc = gspread.authorize(credentials)
 
+
 def refresh_credentials():
     global gc
     gc = gspread.authorize(credentials)
+
 
 def safe_get_sheet(spreadsheet_id, sheet_id, first=True):
     global gc
@@ -33,6 +35,7 @@ def safe_get_sheet(spreadsheet_id, sheet_id, first=True):
         else:
             refresh_credentials()
             return safe_get_sheet(spreadsheet_id, sheet_id, False)
+
 
 def getSheetInfo(league):
     sheetID = None
@@ -49,7 +52,7 @@ def getSheetInfo(league):
 
 def loadSpreadsheetData(league):
     spreadsheetID, sheetID, gRange, pRange, dRange = getSheetInfo(league)
-    sheet = safe_get_sheet(spreadsheetID,sheetID)
+    sheet = safe_get_sheet(spreadsheetID, sheetID)
 
     game_data = SplitDatabaseRows(sheet.range(gRange))
     player_data = SplitDatabaseRows(sheet.range(pRange))
@@ -57,7 +60,8 @@ def loadSpreadsheetData(league):
 
     return (sheet, game_data, player_data, round_data)
 
-#splits from a bunch of cells into lists of rows.
+
+# splits from a bunch of cells into lists of rows.
 def SplitDatabaseRows(fullData):
     if len(fullData) == 0:
         return []
@@ -76,6 +80,7 @@ def SplitDatabaseRows(fullData):
         result.append(currentRow)
 
     return result
+
 
 if __name__ == "__main__":
     # simple test

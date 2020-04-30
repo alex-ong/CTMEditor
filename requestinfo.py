@@ -23,7 +23,7 @@ def isMultipleMessage(string):
     number = 0
     for item in REPORT_PREFIXES:
         number += string.count(item)
-    
+
     for item in SCHEDULE_PREFIXES:
         number += string.count(item)
     if number > 1:
@@ -41,7 +41,6 @@ def ReportingOrScheduling(string):
             return SCHEDULE
     else:
         return None
-
 
 
 ME = "<:me:662518884057743391>"
@@ -66,10 +65,12 @@ def safeInt(item):
     except:
         return None
 
+
 def safeIndex(items, search):
     if search in items:
         return items.index(search)
     return -1
+
 
 def findLeague(items):
     for i, item in enumerate(items):
@@ -156,8 +157,10 @@ class ReportInfo(object):
                     idx = winnerIdx + 1
                     while len(score) < 4:
                         idx += items[idx]
-                        idx += 1        
-            elif items[winnerIdx + 1][0] in "012345" and len(items[winnerIdx + 1]) == 3: # 3-1
+                        idx += 1
+            elif (
+                items[winnerIdx + 1][0] in "012345" and len(items[winnerIdx + 1]) == 3
+            ):  # 3-1
                 score = "(" + items[winnerIdx + 1] + ")"
             else:
                 return (winner, None, None)
@@ -176,24 +179,25 @@ MYSELF = ["i", ":fire:i", "🔥i"]
 # :fire: I will restream :cc: match #20 @sundeco vs @DaAsiann at 0700 PDT
 # :fire: Cancel :cc: match #20
 
+
 class ScheduleInfo(object):
-    def __init__(self, reporter, fullString):        
+    def __init__(self, reporter, fullString):
         self.fullString = fullString
-        
+
         items = fullString.lower().split()
         self.is_cancelled = self.checkCancel(items)
         self.league = findLeague(items)
         self.matchID = findMatchID(items)
-        
+
         self.restreamer = self.findRestreamer(items, reporter)
-        
+
     def checkCancel(self, items):
         cancel_idx = safeIndex(items, "cancel")
         if cancel_idx == 1:
             return True
-        elif items[0].endswith("cancel"): # ":fire:cancel"
+        elif items[0].endswith("cancel"):  # ":fire:cancel"
             return True
-        return False 
+        return False
 
     def findRestreamer(self, items, reporter):
         will_idx = safeIndex(items, "will")
@@ -211,7 +215,7 @@ class ScheduleInfo(object):
         timeString = dt.strftime("%H%M")
         timeZone = "UTC"
         return (dateString, timeString, timeZone)
-    
+
     def mapRelative(self, amount, units):
         print("fucker", amount, units)
         print(units in ["hour", "hours"])
@@ -222,7 +226,7 @@ class ScheduleInfo(object):
             dt = dt + timedelta(minutes=float(amount))
         else:
             raise Exception("Couldn't find hours or minutes")
-        
+
         dateString = dt.strftime("%b-%d")
         timeString = dt.strftime("%H%M")
         timeZone = "UTC"
@@ -232,25 +236,24 @@ class ScheduleInfo(object):
         dateString = None
         timeString = None
         timeZone = None
-        
+
         items = self.fullString.lower().split()
-        
-            
-        #right now.  Shortly, immediately, now
+
+        # right now.  Shortly, immediately, now
         for string in NOW:
             if string in items:
                 print("now")
                 return self.mapNow()
-            
+
         # relative time: in 90 minutes
-        inIndex = safeIndex(items,"in") #restreaming in 5 hours etc.
+        inIndex = safeIndex(items, "in")  # restreaming in 5 hours etc.
         if inIndex != -1:
             print("in x hours")
             return self.mapRelative(items[inIndex + 1], items[inIndex + 2])
-        
+
         # exact date: on mar-30 at 1300 UTC
-        onIndex = safeIndex(items,"on")
-        atIndex = safeIndex(items,"at")
+        onIndex = safeIndex(items, "on")
+        atIndex = safeIndex(items, "at")
         print(onIndex, atIndex)
         try:
             if onIndex != -1:

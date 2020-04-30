@@ -8,15 +8,23 @@ EXAMPLE_MSG = ":redheart: :cc: Completed Match 3 (name_no_space vs name2) Winner
 # return whether we succeeded, as well as error message
 def processReport(r):
     if r.league is None:
-        return (False,
-            "Could not find league\n Please include one of these: " + " ".join(LEAGUE_LIST) + "\n" + EXAMPLE_MSG)
+        return (
+            False,
+            "Could not find league\n Please include one of these: "
+            + " ".join(LEAGUE_LIST)
+            + "\n"
+            + EXAMPLE_MSG,
+        )
 
     sheet, matchData, player_data, _ = loadSpreadsheetData(leagueString(r.league))
     playerList = [player[0].value for player in player_data]
     matches = ConvertToMatches(matchData)
 
     if r.matchID is None:
-        result = ("Could not find match id\n Make sure you wrote match # with a space.\n" + EXAMPLE_MSG)
+        result = (
+            "Could not find match id\n Make sure you wrote match # with a space.\n"
+            + EXAMPLE_MSG
+        )
         result += ValidMatchesString(matches, playerList)
         return (False, result)
 
@@ -53,16 +61,46 @@ def processReport(r):
     if m.matchFinished:
         result += "Warning, match already reported... " + str(m) + "\n"
 
-    result += ("Reporting for " + leagueString(r.league) + " Match " + str(r.matchID) + "\n")
+    result += (
+        "Reporting for " + leagueString(r.league) + " Match " + str(r.matchID) + "\n"
+    )
     which = matchPlayers(r.winner, m.player1, m.player2)
     if which is None:
-        result += ("Could not match " + r.winner + " to either : " + m.player1 + " or " + m.player2 + "\n")
+        result += (
+            "Could not match "
+            + r.winner
+            + " to either : "
+            + m.player1
+            + " or "
+            + m.player2
+            + "\n"
+        )
         return (False, result)
     elif which == "P1":
-        result += "Matched " + r.winner + " to " + m.player1 + ", Score (" + str(r.winScore) + "-" + str(r.loseScore) + ")\n"
+        result += (
+            "Matched "
+            + r.winner
+            + " to "
+            + m.player1
+            + ", Score ("
+            + str(r.winScore)
+            + "-"
+            + str(r.loseScore)
+            + ")\n"
+        )
         m.writeMatchInfo(r.winScore, r.loseScore, r.vod, sheet)
     elif which == "P2":
-        result += "Matched " + r.winner + " to " + m.player2 + ", Score (" + str(r.winScore) + "-" + str(r.loseScore) + ")\n"
+        result += (
+            "Matched "
+            + r.winner
+            + " to "
+            + m.player2
+            + ", Score ("
+            + str(r.winScore)
+            + "-"
+            + str(r.loseScore)
+            + ")\n"
+        )
         m.writeMatchInfo(r.loseScore, r.winScore, r.vod, sheet)
     # finally, push result to cloud
     result += "Successfully logged result\n"
