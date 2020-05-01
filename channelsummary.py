@@ -19,6 +19,8 @@ leagues = {
     "ct1": "Community Tournament TIER ONE",
     "ct2": "Community Tournament TIER TWO",
     "ct3": "Community Tournament TIER THREE",
+    "ct4": "Community Tournament TIER FOUR",
+    "ct5": "Community Tournament TIER FIVE",
 }
 
 
@@ -106,6 +108,8 @@ def GenerateScores(league, data, username_lookup):
             message += tabulate(title)
             message += "-" * (len(tabulate(title)) - 1) + "\n"
         for player in chunk:
+            if len(player.score) == 0:
+                continue
             line = [
                 str(player.seed).rjust(4),
                 str(player.twitch).ljust(twitch_len),
@@ -140,6 +144,7 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
 
     # one message every 8 games.
     for i, chunk in enumerate(chunkMatches(matches, rounds)):
+        
         message = "**" + MessageHeader(league) + " - " + rounds[i][0].value + "**\n"
         message += "Due on or before: " + rounds[i][2].value + "\n"
         message += rounds[i][3].value + "\n"
@@ -148,6 +153,8 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
         message += tabulate(title)
         message += "-" * (len(tabulate(title)) - 1) + "\n"
         for match in chunk:
+            if len(match.player1) == 0 or len(match.player2) == 0:
+                continue
             line = [
                 str(match.matchNo).rjust(2),
                 str(match.player1).ljust(ultraMin),

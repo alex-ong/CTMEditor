@@ -9,6 +9,8 @@ class LEAGUES(Enum):
     CT1 = 3
     CT2 = 4
     CT3 = 5
+    CT4 = 6
+    CT5 = 7
 
 
 # convert from enum to string
@@ -25,6 +27,10 @@ def leagueString(leagues):
         return "ct2"
     elif leagues == LEAGUES.CT3:
         return "ct3"
+    elif leagues == LEAGUES.CT4:
+        return "ct4"
+    elif leagues == LEAGUES.CT5:
+        return "ct5"
     else:
         return None
 

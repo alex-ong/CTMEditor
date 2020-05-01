@@ -4,6 +4,11 @@
         "channelID": 691066503423852655,
         "messages": []
     },
+    "me": {
+        "name": "me",
+        "channelID": "",
+        "messages": []
+    },
     "cc": {
         "name": "cc",
         "channelID": "",
@@ -26,6 +31,16 @@
     },
     "ct3": {
         "name": "ct3",
+        "channelID": "",
+        "messages": []
+    },
+    "ct4": {
+        "name": "ct4",
+        "channelID": "",
+        "messages": []
+    },
+    "ct5": {
+        "name": "ct5",
         "channelID": "",
         "messages": []
     }

@@ -49,14 +49,18 @@ FC = "<:fc:662518740159561738>"
 T1 = "<:t1:688533378303131679>"
 T2 = "<:t2:688533342563336271>"
 T3 = "<:t3:688534577655972026>"
+T4 = "<:t4:705591477358690366>"
+T5 = "<:t5:705591851071307786>"
 CT = "<:ct:688439996478259294>"
 
 CT1 = CT + T1
 CT2 = CT + T2
 CT3 = CT + T3
+CT4 = CT + T4
+CT5 = CT + T5
 
 
-LEAGUE_LIST = [CC, FC, CT1, CT2, CT3]
+LEAGUE_LIST = [ME, CC, FC, CT1, CT2, CT3, CT4, CT5]
 
 
 def safeInt(item):
@@ -75,7 +79,9 @@ def safeIndex(items, search):
 def findLeague(items):
     for i, item in enumerate(items):
         item = item.lower()
-        if item == CC:
+        if item == ME:
+            return LEAGUES.ME
+        elif item == CC:
             return LEAGUES.CC
         elif item == FC:
             return LEAGUES.FC
@@ -85,6 +91,10 @@ def findLeague(items):
             return LEAGUES.CT2
         elif item == CT3:
             return LEAGUES.CT3
+        elif item == CT4:
+            return LEAGUES.CT4
+        elif item == CT5:
+            return LEAGUES.CT5
         elif item == CT:
             nextIdx = i + 1
             # lbyl.  Not pythonic.
@@ -95,6 +105,10 @@ def findLeague(items):
                     return LEAGUES.CT2
                 elif "t3" in items[nextIdx]:
                     return LEAGUES.CT3
+                elif "t4" in items[nextIdx]:
+                    return LEAGUES.CT4
+                elif "t5" in items[nextIdx]:
+                    return Leagues.CT5
     return None
 
 

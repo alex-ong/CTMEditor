@@ -1,4 +1,13 @@
 {
+    "me": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "1231245284",
+        "images": {
+            "CTMME r0-a.png": [ 0.0, 0.5, 0.3, 1.0 ],
+            "CTMME r0-b.png": [ 0.295, 0.5, 0.6, 1.0 ],
+            "CTMME top-16.png": [ 0.0, 0.0, 0.606, 0.5 ]
+        }
+    },
     "cc": {
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
         "sheet_id": "0",
@@ -37,6 +46,22 @@
         "images": {
             "CTMCT3-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
             "CTMCT3-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
+        }
+    },
+    "ct4": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "1816128826",
+        "images": {
+            "CTMCT4-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
+            "CTMCT4-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
+        }
+    },
+    "ct5": {
+        "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
+        "sheet_id": "1816128826",
+        "images": {
+            "CTMCT5-a.png": [ 0.00, 0.0, 0.720, 0.496 ],
+            "CTMCT5-b.png": [ 0.00, 0.496, 0.720, 1.0 ]
         }
     }
 }

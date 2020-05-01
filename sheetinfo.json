@@ -1,9 +1,9 @@
 {
     "spreadsheetID": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
     "me": "CTMME Results",
-    "meRange": "TODO",
-    "mePlayers": "TODO",
-    "meDates": "TODO",
+    "meRange": "A2:J33",
+    "mePlayers": "K2:P33",
+    "meDates": "L36:O37",
     "cc": "CTMCC Results",
     "ccRange": "A2:J30",
     "ccPlayers": "L2:Q17",
@@ -23,5 +23,13 @@
     "ct3": "CTM CT3 Results",
     "ct3Range": "A2:J33",
     "ct3Players": "K2:P33",
-    "ct3Dates": "K37:N40"
+    "ct3Dates": "K37:N40",
+    "ct4": "CTM CT4 Results",
+    "ct4Range": "A2:J33",
+    "ct4Players": "K2:P33",
+    "ct4Dates": "K37:N40",
+    "ct5": "CTM CT5 Results",
+    "ct5Range": "A2:J33",
+    "ct5Players": "K2:P33",
+    "ct5Dates": "K37:N40"
 }
