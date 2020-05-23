@@ -1,4 +1,4 @@
-﻿"""Convert between spreadsheet to class"""
+"""Convert between spreadsheet to class"""
 
 
 class ScoreEntry(object):

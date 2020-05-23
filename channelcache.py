@@ -1,4 +1,4 @@
-﻿from .util import modulePath
+from .util import modulePath
 from os.path import join
 import json
 import collections
