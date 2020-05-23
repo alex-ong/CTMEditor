@@ -76,7 +76,7 @@ def AssignDiscord(players, db_lookup, ss_lookup):
         if db_lookup is not None:
             twitch_lower = player.twitch.lower()
             if twitch_lower in db_lookup:
-                player.discord = username_lookup[twitch_lower]
+                player.discord = db_lookup[twitch_lower]
         # next, try spreadsheet lookup
         if player.discord is None:
             if ss_lookup is not None:
