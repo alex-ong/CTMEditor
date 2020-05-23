@@ -1,5 +1,15 @@
 from .spreadsheetdata import loadLeagueData, loadDiscordData
 from .matchinfo import ConvertToMatches, GetValidMatches
+from .requestinfo import (
+    ME,
+    CC,
+    FC,
+    CT1,
+    CT2,
+    CT3,
+    CT4,
+    CT5,
+)
 from .util import modulePath
 from .scoreentry import ScoreEntry
 from os.path import join
@@ -13,14 +23,14 @@ import discord as discordpy
 
 bracketRoot = "http://35.213.253.125:8080/"
 leagues = {
-    "me": ":me: Masters Event",
-    "cc": ":cc: Challengers Circuit",
-    "fc": ":fc: Futures Circuit",
-    "ct1": ":ct::t1: Community Tournament TIER ONE",
-    "ct2": ":ct::t2: Community Tournament TIER TWO",
-    "ct3": ":ct::t3: Community Tournament TIER THREE",
-    "ct4": ":ct::t4: Community Tournament TIER FOUR",
-    "ct5": ":ct::t5: Community Tournament TIER FIVE",
+    "me": ME + " Masters Event",
+    "cc": CC + " Challengers Circuit",
+    "fc": FC + " Futures Circuit",
+    "ct1": CT1 + " Community Tournament TIER ONE",
+    "ct2": CT2 + " Community Tournament TIER TWO",
+    "ct3": CT3 + " Community Tournament TIER THREE",
+    "ct4": CT4 + " Community Tournament TIER FOUR",
+    "ct5": CT5 + " Community Tournament TIER FIVE",
 }
 
 
@@ -68,6 +78,7 @@ def Header():
 def MessageHeader(league):
     return "Classic Tetris Monthly - " + leagues[league]
 
+
 def AssignDiscord(players, db_lookup, ss_lookup):
     not_linked = 0
 
@@ -81,11 +92,12 @@ def AssignDiscord(players, db_lookup, ss_lookup):
         if player.discord is None:
             if ss_lookup is not None:
                 if twitch_lower in ss_lookup:
-                    player.discord = "["+ss_lookup[twitch_lower] + "]*"
+                    player.discord = "[" + ss_lookup[twitch_lower] + "]*"
                     not_linked += 1
         if player.discord is None:
             player.discord = "Use !link"
     return (players, not_linked)
+
 
 def GenerateScores(league, data, db_lookup, ss_lookup):
     _, _, player_data, _ = data
@@ -95,8 +107,7 @@ def GenerateScores(league, data, db_lookup, ss_lookup):
 
     players, not_linked_cnt = AssignDiscord(players, db_lookup, ss_lookup)
     result = []
-    
-    
+
     # get minimum column widths:
     twitch_len = max([len(player.twitch) for player in players])
     discord_len = max([len(str(player.discord)) for player in players])
@@ -134,11 +145,13 @@ def GenerateScores(league, data, db_lookup, ss_lookup):
             message += tabulate(line)
         message += "```\n"
         result.append(message)
-    
-    if not_linked_cnt:
-        result.append ("```ini\n [playername]* : Player has not used `!link`. Someone had to manually add your discord username.\n```")
 
-    result.append(":spacer:\n" * 2)
+    if not_linked_cnt:
+        result.append(
+            "```ini\n [playername]* : Player has not used `!link`. Someone had to manually add your discord username.\n```"
+        )
+
+    result.append("_ _\n" * 2)
     return result
 
 
@@ -162,7 +175,7 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
 
     # one message every 8 games.
     for i, chunk in enumerate(chunkMatches(matches, rounds)):
-        
+
         message = "**" + MessageHeader(league) + " - " + rounds[i][0].value + "**\n"
         message += "Due on or before: " + rounds[i][2].value + "\n"
         message += rounds[i][3].value + "\n"
@@ -181,7 +194,7 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
             ]
             message += tabulate(line)
         message += "```\n"
-        message += ":spacer:\n" * 2
+        message += "_ _\n" * 2
         results.append(message)
     return results
 
@@ -237,7 +250,7 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
 
         results.append(message)
 
-    results.append(":spacer:\n" * 2)
+    results.append("_ _\n" * 2)
     return results
 
 

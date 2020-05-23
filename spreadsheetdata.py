@@ -59,6 +59,7 @@ def loadLeagueData(league):
 
     return (sheet, game_data, player_data, round_data)
 
+
 def getDiscordInfo():
     with open(join(modulePath(), "sheetinfo.json")) as f:
         data = json.load(f)
@@ -67,18 +68,19 @@ def getDiscordInfo():
         dRange = data["playerlist_discord"]
     return (spreadsheetID, sheetID, dRange)
 
+
 def loadDiscordData():
     spreadsheetID, sheetID, dRange = getDiscordInfo()
     sheet = safe_get_sheet(spreadsheetID, sheetID)
     discord_data = SplitDatabaseRows(sheet.range(dRange))
-    
+
     result = {}
     for row in discord_data:
         result[row[0].value.lower()] = row[1].value
 
     return result
 
-    
+
 # splits from a bunch of cells into lists of rows.
 def SplitDatabaseRows(fullData):
     if len(fullData) == 0:

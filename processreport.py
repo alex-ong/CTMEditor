@@ -1,7 +1,7 @@
 from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
 from .spreadsheetdata import loadLeagueData
 from .playermatch import matchPlayers
-from .requestinfo import LEAGUE_LIST
+from .requestinfo import LEAGUE_LIST, LEAGUE_LIST_PP
 from .util import leagueString
 
 EXAMPLE_MSG = ":redheart: :cc: Completed Match 3 (name_no_space vs name2) Winner: name_no_space (3-1)\n"
@@ -11,7 +11,7 @@ def processReport(r):
         return (
             False,
             "Could not find league\n Please include one of these: "
-            + " ".join(LEAGUE_LIST)
+            + " ".join(LEAGUE_LIST_PP)
             + "\n"
             + EXAMPLE_MSG,
         )

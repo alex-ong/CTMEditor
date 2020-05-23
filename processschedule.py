@@ -1,7 +1,7 @@
 from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
 from .spreadsheetdata import loadLeagueData
 from .util import leagueString
-from .requestinfo import LEAGUE_LIST
+from .requestinfo import LEAGUE_LIST, LEAGUE_LIST_PP
 
 
 EXAMPLE_MSG = (
@@ -17,7 +17,7 @@ def processSchedule(s):
         return (
             False,
             "Could not find league\n Please include one of these: "
-            + " ".join(LEAGUE_LIST)
+            + " ".join(LEAGUE_LIST_PP)
             + "\n"
             + EXAMPLE_MSG
             + "\n",

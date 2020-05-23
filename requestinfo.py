@@ -61,6 +61,16 @@ CT5 = CT + T5
 
 
 LEAGUE_LIST = [ME, CC, FC, CT1, CT2, CT3, CT4, CT5]
+LEAGUE_LIST_PP = [
+    ":me:",
+    ":cc:",
+    ":fc:",
+    ":ct::t1:",
+    ":ct::t2:",
+    ":ct::t3:",
+    ":ct::t4:",
+    ":ct::t5:",
+]
 
 
 def safeInt(item):
