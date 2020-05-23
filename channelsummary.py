@@ -1,4 +1,4 @@
-from .spreadsheetdata import loadSpreadsheetData
+from .spreadsheetdata import loadLeagueData, loadDiscordData
 from .matchinfo import ConvertToMatches, GetValidMatches
 from .util import modulePath
 from .scoreentry import ScoreEntry
@@ -13,22 +13,23 @@ import discord as discordpy
 
 bracketRoot = "http://35.213.253.125:8080/"
 leagues = {
-    "me": "Masters Event",
-    "cc": "Challengers Circuit",
-    "fc": "Futures Circuit",
-    "ct1": "Community Tournament TIER ONE",
-    "ct2": "Community Tournament TIER TWO",
-    "ct3": "Community Tournament TIER THREE",
-    "ct4": "Community Tournament TIER FOUR",
-    "ct5": "Community Tournament TIER FIVE",
+    "me": ":me: Masters Event",
+    "cc": ":cc: Challengers Circuit",
+    "fc": ":fc: Futures Circuit",
+    "ct1": ":ct::t1: Community Tournament TIER ONE",
+    "ct2": ":ct::t2: Community Tournament TIER TWO",
+    "ct3": ":ct::t3: Community Tournament TIER THREE",
+    "ct4": ":ct::t4: Community Tournament TIER FOUR",
+    "ct5": ":ct::t5: Community Tournament TIER FIVE",
 }
 
 
 def GenerateChannelMessages(league, username_lookup):
     result = []
     result.extend(Header())
-    data = loadSpreadsheetData(league)
-    result.extend(GenerateScores(league, data, username_lookup))
+    data = loadLeagueData(league)
+    ss_discord_ids = loadDiscordData()
+    result.extend(GenerateScores(league, data, username_lookup, ss_discord_ids))
     result.extend(GenerateMatches(league, data))
     result.extend(GenerateScreenshot(league))
 
@@ -67,22 +68,35 @@ def Header():
 def MessageHeader(league):
     return "Classic Tetris Monthly - " + leagues[league]
 
+def AssignDiscord(players, db_lookup, ss_lookup):
+    not_linked = 0
 
-def GenerateScores(league, data, username_lookup):
+    for player in players:
+        # try database first
+        if db_lookup is not None:
+            twitch_lower = player.twitch.lower()
+            if twitch_lower in db_lookup:
+                player.discord = username_lookup[twitch_lower]
+        # next, try spreadsheet lookup
+        if player.discord is None:
+            if ss_lookup is not None:
+                if twitch_lower in ss_lookup:
+                    player.discord = "["+ss_lookup[twitch_lower] + "]*"
+                    not_linked += 1
+        if player.discord is None:
+            player.discord = "Use !link"
+    return (players, not_linked)
+
+def GenerateScores(league, data, db_lookup, ss_lookup):
     _, _, player_data, _ = data
     players = []
     for player in player_data:
         players.append(ScoreEntry(player))
 
+    players, not_linked_cnt = AssignDiscord(players, db_lookup, ss_lookup)
     result = []
-    if username_lookup is not None:
-        for player in players:
-            twitch_lower = player.twitch.lower()
-            if twitch_lower in username_lookup:
-                player.discord = username_lookup[twitch_lower]
-            else:
-                player.discord = "Use !link"
-
+    
+    
     # get minimum column widths:
     twitch_len = max([len(player.twitch) for player in players])
     discord_len = max([len(str(player.discord)) for player in players])
@@ -96,7 +110,7 @@ def GenerateScores(league, data, username_lookup):
     result.append(message)
 
     for i, chunk in enumerate(chunks(players, 16)):
-        message = "```javascript\n"
+        message = "```ini\n"
         if i == 0:
             title = [
                 "Seed",
@@ -120,7 +134,11 @@ def GenerateScores(league, data, username_lookup):
             message += tabulate(line)
         message += "```\n"
         result.append(message)
-    result.append(".\n" * 2)
+    
+    if not_linked_cnt:
+        result.append ("```ini\n [playername]* : Player has not used `!link`. Someone had to manually add your discord username.\n```")
+
+    result.append(":spacer:\n" * 2)
     return result
 
 
@@ -163,7 +181,7 @@ def GenerateAllMatches(game_data, rounds, player_names, league):
             ]
             message += tabulate(line)
         message += "```\n"
-        message += ".\n" * 2
+        message += ":spacer:\n" * 2
         results.append(message)
     return results
 
@@ -219,7 +237,7 @@ def GenerateUnplayedMatches(game_data, rounds, player_names, league):
 
         results.append(message)
 
-    results.append(".\n" * 2)
+    results.append(":spacer:\n" * 2)
     return results
 
 

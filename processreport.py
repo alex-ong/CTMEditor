@@ -1,5 +1,5 @@
 from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
-from .spreadsheetdata import loadSpreadsheetData
+from .spreadsheetdata import loadLeagueData
 from .playermatch import matchPlayers
 from .requestinfo import LEAGUE_LIST
 from .util import leagueString
@@ -16,7 +16,7 @@ def processReport(r):
             + EXAMPLE_MSG,
         )
 
-    sheet, matchData, player_data, _ = loadSpreadsheetData(leagueString(r.league))
+    sheet, matchData, player_data, _ = loadLeagueData(leagueString(r.league))
     playerList = [player[0].value for player in player_data]
     matches = ConvertToMatches(matchData)
 

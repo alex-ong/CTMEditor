@@ -36,7 +36,7 @@ def safe_get_sheet(spreadsheet_id, sheet_id, first=True):
             return safe_get_sheet(spreadsheet_id, sheet_id, False)
 
 
-def getSheetInfo(league):
+def getLeagueInfo(league):
     sheetID = None
     with open(join(modulePath(), "sheetinfo.json")) as f:
         data = json.load(f)
@@ -49,8 +49,8 @@ def getSheetInfo(league):
     return (spreadsheetID, sheetID, gRange, pRange, dRange)
 
 
-def loadSpreadsheetData(league):
-    spreadsheetID, sheetID, gRange, pRange, dRange = getSheetInfo(league)
+def loadLeagueData(league):
+    spreadsheetID, sheetID, gRange, pRange, dRange = getLeagueInfo(league)
     sheet = safe_get_sheet(spreadsheetID, sheetID)
 
     game_data = SplitDatabaseRows(sheet.range(gRange))
@@ -59,7 +59,26 @@ def loadSpreadsheetData(league):
 
     return (sheet, game_data, player_data, round_data)
 
+def getDiscordInfo():
+    with open(join(modulePath(), "sheetinfo.json")) as f:
+        data = json.load(f)
+        spreadsheetID = data["spreadsheetID"]
+        sheetID = data["playerlist"]
+        dRange = data["playerlist_discord"]
+    return (spreadsheetID, sheetID, dRange)
 
+def loadDiscordData():
+    spreadsheetID, sheetID, dRange = getDiscordInfo()
+    sheet = safe_get_sheet(spreadsheetID, sheetID)
+    discord_data = SplitDatabaseRows(sheet.range(dRange))
+    
+    result = {}
+    for row in discord_data:
+        result[row[0].value.lower()] = row[1].value
+
+    return result
+
+    
 # splits from a bunch of cells into lists of rows.
 def SplitDatabaseRows(fullData):
     if len(fullData) == 0:
@@ -83,4 +102,4 @@ def SplitDatabaseRows(fullData):
 
 if __name__ == "__main__":
     # simple test
-    data = loadSpreadsheetData("cc")
+    data = loadLeagueData("cc")

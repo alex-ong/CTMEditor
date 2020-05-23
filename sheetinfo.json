@@ -31,5 +31,7 @@
     "ct5": "CTM CT5 Results",
     "ct5Range": "A2:J33",
     "ct5Players": "K2:P33",
-    "ct5Dates": "K37:N40"
+    "ct5Dates": "K37:N40",
+    "playerlist": "Seeding_Final",
+    "playerlist_discord": "I2:J300"
 }
