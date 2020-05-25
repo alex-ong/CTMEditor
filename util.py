@@ -12,6 +12,25 @@ class LEAGUES(Enum):
     CT4 = 6
     CT5 = 7
 
+def leagueEmoteMD(leagues):
+    if leagues == LEAGUES.ME:
+        return ":me:"
+    elif leagues == LEAGUES.CC:
+        return ":cc:"
+    elif leagues == LEAGUES.FC:
+        return ":fc:"
+    elif leagues == LEAGUES.CT1:
+        return ":ct::t1:"
+    elif leagues == LEAGUES.CT2:
+        return ":ct::t2:"
+    elif leagues == LEAGUES.CT3:
+        return ":ct::t3:"
+    elif leagues == LEAGUES.CT4:
+        return ":ct::t4:"
+    elif leagues == LEAGUES.CT5:
+        return ":ct::t5:"
+    else:
+        return None
 
 # convert from enum to string
 def leagueString(leagues):

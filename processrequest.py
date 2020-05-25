@@ -31,7 +31,7 @@ def processRequest(user, string):
         )
 
     if msgType == REPORT:
-        data = ReportInfo(string)
+        data = ReportInfo(user, string)
         success, message = processReport(data)
     elif msgType == SCHEDULE:
         data = ScheduleInfo(user, string)

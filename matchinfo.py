@@ -46,17 +46,29 @@ class MatchInfo(object):
         return self._isValidMatch
 
     # writes match info to data backing, but does not commit over internet
-    def writeMatchInfo(self, player1Score, player2Score, vod, wksheet):
+    def writeMatchInfo(self, player1Score, player2Score, vod, wksheet, matchTimeStamp, reporter):
+        writeMatchTime = False
         if player1Score <= 0 and player2Score <= 0:
             player1Score = ""
             player2Score = ""
+        elif not self.matchTime or len(self.matchTime) == 0:
+            matchTimeStamp = matchTimeStamp
+            restreamer = reporter
+            writeMatchTime = True
+            
         wksheet.update_cell(self.data[2].row, self.data[2].col, player1Score)
         wksheet.update_cell(self.data[3].row, self.data[3].col, player2Score)
         wksheet.update_cell(self.data[9].row, self.data[9].col, vod)
-
+        
+        if writeMatchTime:
+            wksheet.update_cell(self.data[7].row, self.data[7].col, matchTimeStamp)
+            wksheet.update_cell(self.data[8].row, self.data[8].col, restreamer)
+        
     def writeRestreamInfo(self, matchTimeStamp, restreamer, wksheet):
+        old_r, old_time = self.restreamer, self.matchTime
         wksheet.update_cell(self.data[7].row, self.data[7].col, matchTimeStamp)
         wksheet.update_cell(self.data[8].row, self.data[8].col, restreamer)
+        return old_r, old_time
 
     def __str__(self):
         if self.matchFinished:

@@ -1,6 +1,6 @@
 from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
 from .spreadsheetdata import loadLeagueData
-from .util import leagueString
+from .util import leagueString, leagueEmoteMD
 from .requestinfo import LEAGUE_LIST, LEAGUE_LIST_PP
 
 
@@ -91,6 +91,15 @@ def processSchedule(s):
     # on success, write back to the spreadsheet lmao.
     timestampstring = " ".join(str(item) for item in [date, time, tz])
 
-    m.writeRestreamInfo(timestampstring, s.restreamer, sheet)
+    old_r, old_t = m.writeRestreamInfo(timestampstring, s.restreamer, sheet)
+    old_r = "".join(old_r.split())
+    if old_r and old_t:
+        result += "```\n```diff\n"
+        result += "- Warning, overridding existing schedule:\n"
+        result += f"Restreamer: {old_r} | Time: {old_t}\n"
+        result += "- If this is not your intention, copy paste this message to undo:\n"
+        date, time, tz = old_t.split()
+        league_md = leagueEmoteMD(s.league)
+        result += f":fire: {old_r} will restream {league_md} Match {s.matchID} on {date} at {time} {tz}\n"
     result += "Successfully updated.\n"
     return (True, result)

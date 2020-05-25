@@ -1,7 +1,7 @@
 from .matchinfo import ConvertToMatches, GetMatchByIndex, ValidMatchesString
 from .spreadsheetdata import loadLeagueData
 from .playermatch import matchPlayers
-from .requestinfo import LEAGUE_LIST, LEAGUE_LIST_PP
+from .requestinfo import LEAGUE_LIST, LEAGUE_LIST_PP, mapNow
 from .util import leagueString
 
 EXAMPLE_MSG = ":redheart: :cc: Completed Match 3 (name_no_space vs name2) Winner: name_no_space (3-1)\n"
@@ -65,6 +65,7 @@ def processReport(r):
         "Reporting for " + leagueString(r.league) + " Match " + str(r.matchID) + "\n"
     )
     which = matchPlayers(r.winner, m.player1, m.player2)
+    timestamp = " ".join(mapNow())
     if which is None:
         result += (
             "Could not match "
@@ -88,7 +89,7 @@ def processReport(r):
             + str(r.loseScore)
             + ")\n"
         )
-        m.writeMatchInfo(r.winScore, r.loseScore, r.vod, sheet)
+        m.writeMatchInfo(r.winScore, r.loseScore, r.vod, sheet, timestamp, r.reporter)
     elif which == "P2":
         result += (
             "Matched "
@@ -101,7 +102,7 @@ def processReport(r):
             + str(r.loseScore)
             + ")\n"
         )
-        m.writeMatchInfo(r.loseScore, r.winScore, r.vod, sheet)
+        m.writeMatchInfo(r.loseScore, r.winScore, r.vod, sheet, timestamp, r.reporter)
     # finally, push result to cloud
     result += "Successfully logged result\n"
 

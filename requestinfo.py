@@ -145,13 +145,13 @@ def findVOD(items):
 
 
 class ReportInfo(object):
-    def __init__(self, fullString):
+    def __init__(self, user, fullString):
         self.fullString = fullString
         items = fullString.split()
         self.matchID = findMatchID(items)
         self.league = findLeague(items)
         self.vod = findVOD(items)
-
+        self.reporter = user
         self.winner, self.winScore, self.loseScore = self.mapScores(items)
 
     # support Winner: playername (3-0)
@@ -195,7 +195,7 @@ class ReportInfo(object):
         winnerScore = safeInt(score[1])
         loserScore = safeInt(score[3])
         return (winner, winnerScore, loserScore)
-
+    
 
 NOW = ["now", "shortly", "immediately", "soon", "momentarily"]
 MYSELF = ["i", ":fire:i", "🔥i"]
@@ -231,18 +231,9 @@ class ScheduleInfo(object):
             restreamer = items[will_idx - 1]
             if restreamer in MYSELF:
                 restreamer = reporter
-        return restreamer
-
-    def mapNow(self):
-        dt = datetime.utcnow()
-        dateString = dt.strftime("%b-%d")
-        timeString = dt.strftime("%H%M")
-        timeZone = "UTC"
-        return (dateString, timeString, timeZone)
+        return restreamer    
 
     def mapRelative(self, amount, units):
-        print("fucker", amount, units)
-        print(units in ["hour", "hours"])
         dt = datetime.utcnow()
         if units in ["hour", "hours"]:
             dt = dt + timedelta(hours=float(amount))
@@ -267,7 +258,7 @@ class ScheduleInfo(object):
         for string in NOW:
             if string in items:
                 print("now")
-                return self.mapNow()
+                return mapNow()
 
         # relative time: in 90 minutes
         inIndex = safeIndex(items, "in")  # restreaming in 5 hours etc.
@@ -289,3 +280,10 @@ class ScheduleInfo(object):
             pass
 
         return (dateString, timeString, timeZone)
+
+def mapNow():
+    dt = datetime.utcnow()
+    dateString = dt.strftime("%b-%d")
+    timeString = dt.strftime("%H%M")
+    timeZone = "UTC"
+    return (dateString, timeString, timeZone)
