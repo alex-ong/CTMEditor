@@ -20,8 +20,8 @@
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
         "sheet_id": "1056668535",
         "images": {
-            "CTMFC winners.png": [ 0.0, 0.0, 0.792, 0.340 ],
-            "CTMFC losers.png": [ 0.0, 0.340, 0.792, 0.665 ]
+            "CTMFC-a.png": [ 0.0, 0.0, 0.720, 0.496 ],
+            "CTMFC-b.png": [ 0.0, 0.496, 0.720, 1.0 ]
         }
     },
     "ct1": {
