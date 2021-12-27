@@ -4,6 +4,7 @@ from .requestinfo import (
     ME,
     CC,
     FC,
+    HC,
     CT1,
     CT2,
     CT3,
