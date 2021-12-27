@@ -21,7 +21,7 @@ import io
 
 import discord as discordpy
 
-bracketRoot = "http://nestris.club:8080/"
+bracketRoot = "http://45.76.119.153:8080/"
 leagues = {
     "me": ME + " Masters Event",
     "cc": CC + " Challengers Circuit",
