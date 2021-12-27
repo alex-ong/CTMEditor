@@ -26,10 +26,10 @@
     },
     "hc": {
         "spreadsheet_id": "1VlI8JQOopeeV2xnqvr7Zy6QB1K6krkJ90L_RbXtzVJo",
-        "sheet_id": "988634140",
+        "sheet_id": "2094649891",
         "images": {
-            "CTMHC-a.png": [ 0.0, 0.0, 0.720, 0.496 ],
-            "CTMHC-b.png": [ 0.0, 0.496, 0.720, 1.0 ]
+            "CTMHC winners.png": [ 0.0, 0.0, 0.792, 0.340 ],
+            "CTMHC losers.png": [ 0.0, 0.340, 0.792, 0.665 ]
         }
     },
     "ct1": {
