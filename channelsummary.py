@@ -26,6 +26,7 @@ leagues = {
     "me": ME + " Masters Event",
     "cc": CC + " Challengers Circuit",
     "fc": FC + " Futures Circuit",
+    "hc": HC + " Hopefuls Circuit",
     "ct1": CT1 + " Community Tournament TIER ONE",
     "ct2": CT2 + " Community Tournament TIER TWO",
     "ct3": CT3 + " Community Tournament TIER THREE",

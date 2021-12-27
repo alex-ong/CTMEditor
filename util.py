@@ -6,6 +6,7 @@ class LEAGUES(Enum):
     ME = 0
     CC = 1
     FC = 2
+    HC = 8
     CT1 = 3
     CT2 = 4
     CT3 = 5
@@ -19,6 +20,8 @@ def leagueEmoteMD(leagues):
         return ":cc:"
     elif leagues == LEAGUES.FC:
         return ":fc:"
+    elif leagues == LEAGUES.HC:
+        return ":hc:"
     elif leagues == LEAGUES.CT1:
         return ":ct::t1:"
     elif leagues == LEAGUES.CT2:
@@ -40,6 +43,8 @@ def leagueString(leagues):
         return "cc"
     elif leagues == LEAGUES.FC:
         return "fc"
+    elif leagues == LEAGUES.HC:
+        return "hc"
     elif leagues == LEAGUES.CT1:
         return "ct1"
     elif leagues == LEAGUES.CT2:

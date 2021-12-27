@@ -46,12 +46,13 @@ def ReportingOrScheduling(string):
 ME = "<:me:662518884057743391>"
 CC = "<:cc:662518277091885066>"
 FC = "<:fc:662518740159561738>"
+HC = "<:hc:925057656333410354>"
 T1 = "<:t1:688533378303131679>"
 T2 = "<:t2:688533342563336271>"
 T3 = "<:t3:688534577655972026>"
 T4 = "<:t4:705591477358690366>"
 T5 = "<:t5:705591851071307786>"
-CT = "<:ct:688439996478259294>"
+CT = "<:ct:925058131199918190>"
 
 CT1 = CT + T1
 CT2 = CT + T2
@@ -60,11 +61,12 @@ CT4 = CT + T4
 CT5 = CT + T5
 
 
-LEAGUE_LIST = [ME, CC, FC, CT1, CT2, CT3, CT4, CT5]
+LEAGUE_LIST = [ME, CC, FC, HC, CT1, CT2, CT3, CT4, CT5]
 LEAGUE_LIST_PP = [
     ":me:",
     ":cc:",
     ":fc:",
+    ":hc:",
     ":ct::t1:",
     ":ct::t2:",
     ":ct::t3:",
@@ -95,6 +97,8 @@ def findLeague(items):
             return LEAGUES.CC
         elif item == FC:
             return LEAGUES.FC
+        elif item == HC:
+            return LEAGUES.HC
         elif item == CT1:
             return LEAGUES.CT1
         elif item == CT2:
