@@ -10,11 +10,11 @@ def safeInt(value):
 class MatchInfo(object):
     @staticmethod
     def isValidMatchID(rowOfCells):
-        value = int(rowOfCells[0].value)
-        return value >= 1
+        value = safeInt(rowOfCells[0].value)
+        return value is not None and value >= 1
 
     def __init__(self, data):
-        self.matchNo = safeInt(data[0].value)
+        self.matchNo = int(data[0].value)
         self.player1 = data[1].value
         self.score1 = safeInt(data[2].value)
         self.score2 = safeInt(data[3].value)
@@ -38,8 +38,6 @@ class MatchInfo(object):
         return s1 + "-" + s2
 
     def isValidMatch(self, playerList):
-        if self.matchNo is None:
-            return False
         if self._isValidMatch is None:
             self._isValidMatch = (
                 self.player1 in playerList and self.player2 in playerList
